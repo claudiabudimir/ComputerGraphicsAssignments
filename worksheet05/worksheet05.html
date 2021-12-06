@@ -19,36 +19,31 @@
 
         <h2>Part 4: Shade the object using Phong shading and the Phong illumination model</h2>
         <canvas id="gl-canvas4" width="512" height="512"></canvas>
-        <br>
-        <div style="text-align: center">
-            <button id="orbit_button3">Enable/Diable Orbit view</button>
-        </div>
-        <br>
-        <br>
-        <div class="slidecontainer">
-            Ambient reflectivity coefficient (Ka) <br>
-            0<input type="range" min="0" max="1" step="0.01" value="0.50"
-                id="Ka4">1
-            &nbsp;&nbsp;&nbsp;&nbsp;Value = <span id="Kav4"></span><br>
 
-            Diffuse reflectivity coefficient (Kd)<br>
+        <br>
+        <div class="container" style="text-align: center;">
+
             0<input type="range" min="0" max="1" step="0.01" value="0.1"
-                id="Kd4">1
-            &nbsp;&nbsp;&nbsp;&nbsp;Value = <span id="Kdv4"></span><br>
+                id="Ka4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ka4">Ambient
+                reflectivity coefficient (Ka) = </label>
+            <span id="Kav4"></span><br><br>
 
-            Specular reflectivity coefficient (Ks)<br>
+            0<input type="range" min="0" max="1" step="0.01" value="0.6"
+                id="Kd4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Kd4">Diffuse
+                reflectivity coefficient (Kd) = </label>
+            <span id="Kdv4"></span><br><br>
+
             0<input type="range" min="0" max="1" step="0.01" value="1.0"
-                id="Ks4">1
-            &nbsp;&nbsp;&nbsp;Value = <span id="Ksv4"></span><br>
+                id="Ks4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ks4">Specular
+                reflectivity coefficient (Ks) = </label>
+            <span id="Ksv4"></span><br><br>
 
-            <span>Shininess(s)</span><br>
-            0<input type="range" min="0" max="100" value="18" id="s4">100
-            &nbsp;&nbsp;Value = <span id="sv4"></span><br>
-
-            Emitted radiance(Le)<br>
+            0<input type="range" min="0" max="100" value="100" id="α4">100
+            &nbsp;&nbsp;<label for="α4">Shininess(α) = </label> <span id="αv4"></span><br><br>
             0<input type="range" min="0" max="2" step="0.01" value="1.35"
-                id="Le4">2
-            &nbsp;&nbsp;&nbsp;&nbsp;Value = <span id="Lev4"></span><br>
+                id="Le4">2 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Le4">Light
+                emmision(Le) = </label>
+            <span id="Lev4"></span><br><br>
         </div>
 
         <!-- Shader's Scripts -->
