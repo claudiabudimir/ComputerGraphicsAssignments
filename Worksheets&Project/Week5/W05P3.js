@@ -121,11 +121,11 @@ function init() {
     var fovy = 45.0; //angl3es in degrees
     var aspect = canvas.width / canvas.height;
     var near = 0.1;
-    var far = 100.0;
+    var far = 50.0;
 
 
     var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
-    var pj = perspective(fovy, aspect, near, far);
+    pj = perspective(45.0, 1, 0.1, 10);
     gl3.uniformMatrix4fv(projectMatrix, gl3.FALSE, flatten(pj));
 
     var modelViewMatrixLoc = gl3.getUniformLocation(program, "modelViewMatrix");
