@@ -1,4 +1,4 @@
-var obj_fn = 'monkey.obj'
+var obj_fn = 'final_pokeball.obj'
 
 var g4_objDoc = null; // Info parsed from OBJ file
 var g4_drawingInfo = null; // Info for drawing the 3D model with WebGL
@@ -114,14 +114,14 @@ function init() {
         return model;
     }
 
-    var eye = vec3(50, 0, 0);
+    var eye = vec3(5, 0, 0);
     var at = vec3(0.0, 0.0, 0.);
     const up = vec3(0.0, 1.0, 0.0);
 
     var fovy = 45.0; //angl4es in degrees
     var aspect = canvas.width / canvas.height;
     var near = 0.1;
-    var far = 0.0;
+    var far = 50.0;
 
     var lightPosition = vec4(0.0, 0.0, 1.0, 0.0);
 
