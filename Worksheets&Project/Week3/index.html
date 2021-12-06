@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="author" content="Carlos Ventura">
+    <script type="text/javascript" src="../Utilities/initShaders.js"></script>
+    <script type="text/javascript" src="../Utilities/MV.js"></script>
+    <script type="text/javascript" src="../Utilities/webgl-utils.js"></script>
+    <meta charset="UTF-8">
+    <style>
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        ul,
+        ol {
+            text-align: center;
+            list-style-position: inside;
+            font-size: larger
+        }
+
+        body {
+            background-image: url('../BG.png');
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+
+            font-family: Arial;
+        }
+
+        button {
+            font-weight: bold;
+        }
+
+        canvas {
+            padding: 0;
+            margin: auto;
+            display: block;
+        }
+
+        hr.dashed {
+            border-top: 3px dashed white;
+        }
+
+        div {
+            text-align: center;
+            font-size: larger;
+        }
+    </style>
+</head>
+<html>
+
+<body>
+    <h1>Week 4 Exercises</h1>
+    <h2>WORKSHEET 3: Projections (virtual camera) and transformations</h2>
+    <hr class="dashed">
+
+    <h2>Part 1 - Draw a wireframe unit cube in isometric view.</h2>
+
+    <canvas id="gl-canvas1" width="512" height="512">
+        Web browser does not support HTML5’s canvas element.
+    </canvas>
+    <hr class="dashed">
+
+
+    <h2>Part 2.1 - Draw the unit cube in different classical perspective views.</h2>
+    <ul>
+        <li>Introduce a projection matrix that sets the camera to be a pinhole camera with a 45 degrees vertical field
+            of view. [Angel 1.4.1, 5.5-5.7]</li>
+    </ul>
+
+    <canvas id="gl-canvas2" width="512" height="512">
+        Web browser does not support HTML5’s canvas element.
+    </canvas>
+    <hr class="dashed">
+
+
+
+
+    <h2>Part 2.2 - Draw the unit cube in different classical perspective views.</h2>
+    <ul>
+        <li>Draw the cube three times in the same rendering. Transform the cubes so that one is in one-point (front)
+            perspective, one is in two-point (X) perspective, and one is in three-point perspective. [Angel 4.9-4.11,
+            5.1.5]</li>
+    </ul>
+
+    <canvas id="gl-canvas3" width="512" height="512">
+        Web browser does not support HTML5’s canvas element.
+    </canvas>
+    <hr class="dashed">
+
+
+
+    <h2>Part 3 - Reflect on the theory of affine transformations and viewing transformations by doing the following:
+    </h2>
+    <ul>
+        <li>List the transformation matrices that you used in Parts 1 and 2 (use general expressions rather than
+            concrete numbers). [Angel 4.9, 5.3-5.5]</li>
+        <li>For each cube, write down a formula showing how the matrices were concatenated to become the current
+            transformation matrix (CTM) that was used to transform the vertices in the vertex shader. [Angel 4.10-4.11]
+        </li>
+    </ul>
+            <div>
+
+                <p><b>ANSWER 1</b></p>
+                <p><b>Part 1: LootAt (ModelView) Matrix used</b></p>
+                <p>mat4 LookAt(vec3 eye, vec3 at, vec3 up)</p>
+
+                vec3 zaxis = normalize(at - eye); <br>
+                vec3 xaxis = normalize(cross(zaxis, up));<br>
+                vec3 yaxis = cross(xaxis, zaxis);<br>
+                negate(zaxis);
+
+                <br>
+                <br>
+
+
+                mat4 viewMatrix = { <br>
+                vec4(xaxis.x, xaxis.y, xaxis.z, -dot(xaxis, eye)), <br>
+                vec4(yaxis.x, yaxis.y, yaxis.z, -dot(yaxis, eye)), <br>
+                vec4(zaxis.x, zaxis.y, zaxis.z, -dot(zaxis, eye)), <br>
+                vec4(0, 0, 0, 1) <br>
+                }<br><br>
+
+                <b>Part 2:</b>
+
+                <b>Perspective(Project) Matrix used -> not affine -> viewing Matrix</b><br><br>
+
+                mat4 perspective(fovy, aspect, near, far) = { <br>
+                vec4((1/aspect) cot (fovy/2), 0, 0, 0),<br>
+                vec4(0, cot fovy/2, 0, 0),<br>
+                vec4(0, 0, (near + far) / (near -far), 2*near*far/(near - far) ),<br>
+                vec4(0, 0, -1, 0)<br>
+                }<br><br>
+
+                <b>LookAt Matrix used showed above</b> <br><br>
+
+                <b>Translate Matrix used</b> <br><br>
+
+                x' = x + αx ,<br>
+                y' = y + αy ,<br>
+                z' = z + αz <br><br>
+
+                mat4 translate(αx, αy, αz) = {<br>
+                vec4(1, 0, 0, αx),<br>
+                vec4(0, 1, 0, αy),<br>
+                vec4(0, 0, 1, αz),<br>
+                vec4(0, 0, 0, 1)<br>
+                }<br><br>
+
+                <b>Scalem Matrix used</b><br><br>
+
+                x' = βx * x,<br>
+                y' = βy * y,<br>
+                z' = βz * z.<br><br>
+
+                mat4 scalem(βx, βy, βz) = {<br>
+                vec4(βx, 0, 0, 0),<br>
+                vec4(0, βy, 0, 0),<br>
+                vec4(0, 0, βz, 0),<br>
+                vec4(0, 0, 0, 1)<br>
+                }<br><br>
+
+                <p><b>ANSWER 2</b></p>
+        <b>Part 1</b> <br>
+            C as CTM<br><br>
+
+            C <- LookAt * vertex p<br><br>
+
+                <b> Part 2.1</b><br><br>
+                C <- perspective * translate * scalem * vertex p<br><br>
+
+                    <b> Part 2.2</b><br><br>
+                    C <- perspective * lookAt * translate * vertex p<br><br>
+                        The different cubes use different values for the matrix translate and the matrix lookAt<br><br>
+            </div>
+
+
+   <!--Part 1 -->
+    <script id="vertex-shader-1" type="x-shader/x-vertex">
+        attribute vec4 a_Position; 
+        attribute vec4 a_Color; 
+        varying vec4 v_Color;
+
+        uniform mat4 translation;  
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+            gl_Position = modelViewMatrix * a_Position ;
+            v_Color = a_Color; 
+        }
+    </script>
+    <script id="fragment-shader-1" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+    </script>
+    <script type="text/javascript" src="W03P1.js"></script>
+
+   <!--Part 2 -->
+
+    <script id="vertex-shader-2" type="x-shader/x-vertex">
+        attribute vec4 a_Position; 
+        attribute vec4 a_Color; 
+        varying vec4 v_Color;
+
+        uniform mat4 projectMatrix;
+
+        void main() {
+            gl_Position = projectMatrix * a_Position ;
+            v_Color = a_Color; 
+        }
+    </script>
+    <script id="fragment-shader-2" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+    </script>
+    <script type="text/javascript" src="W03P2_1.js"></script>
+
+   <!--Part 3 -->
+
+    <script id="vertex-shader-3" type="x-shader/x-vertex">
+        attribute vec4 a_Position; 
+        attribute vec4 a_Color; 
+        varying vec4 v_Color;
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+            v_Color = a_Color; 
+        }
+    </script>
+    <script id="fragment-shader-3" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+    </script>
+    <script type="text/javascript" src="W03P2_2.js"></script>
+
+</body>
+
+
+</html>

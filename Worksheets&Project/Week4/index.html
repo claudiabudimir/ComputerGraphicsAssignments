@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="author" content="Carlos Ventura">
+    <script type="text/javascript" src="../Utilities/initShaders.js"></script>
+    <script type="text/javascript" src="../Utilities/MV.js"></script>
+    <script type="text/javascript" src="../Utilities/webgl-utils.js"></script>
+    <meta charset="UTF-8">
+    <style>
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        ul {
+            text-align: left;
+            list-style-position: inside;
+            font-size: larger
+        }
+
+        body {
+            background-image: url('../BG.png');
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+
+            font-family: Arial;
+        }
+
+        button {
+            font-weight: bold;
+        }
+
+        canvas {
+            padding: 0;
+            margin: auto;
+            display: block;
+        }
+
+        hr.dashed {
+            border-top: 3px dashed white;
+        }
+
+        div {
+            width: 25%;
+            margin: 0 auto;
+            font-weight: bolder;
+            font-size: large;
+        }
+
+    </style>
+</head>
+<html>
+
+<body>
+    <h1 style="font-size:xx-large">Week 5 Exercises</h1>
+
+    <h2>WORKSHEET 4: Lighting and (forward) shading</h2>
+    <hr class="dashed">
+
+    <td style="width: 1100px;">
+        <h2>Part 1 - Draw a sphere in perspective view</h2>
+
+        <canvas id="gl-canvas1" width="512" height="512">
+            Web browser does not support HTML5’s canvas element.
+        </canvas><br>
+        <div>
+            <button id="increment1">Increment</button>
+            <button id="decrement1">Decrement</button>
+        </div>
+        <hr class="dashed">
+
+        <h2>Part 2 - Use depth buffer and back face culling to remove hidden surfaces.</h2>
+
+        <canvas id="gl-canvas2" width="512" height="512">
+            Web browser does not support HTML5’s canvas element.
+        </canvas> <br>
+        <div>
+            <button id="increment2">Increment</button>
+            <button id="decrement2">Decrement</button>
+            <button id="face2">Back/Front</button>
+        </div>
+        <hr class="dashed">
+
+
+        <h2>Part 3 - Use Gouraud shading (with true normals) to draw a diffuse sphere lit by a distant, white,
+            directional light
+            with direction (0,0,−1).</h2>
+
+        <canvas id="gl-canvas3" width="512" height="512">
+            Web browser does not support HTML5’s canvas element.
+        </canvas>
+        <br>
+        <div>
+            <button id="increment3">Increment</button>
+            <button id="decrement3">Decrement</button>
+            <button id="animation3">Animation</button>
+        </div>
+        <hr class="dashed">
+
+
+
+        <h2>Part 4 - Implement the full Phong reflection model in the vertex shader</h2>
+
+        <canvas id="gl-canvas4" width="512" height="512">
+            Web browser does not support HTML5’s canvas element.
+        </canvas> <br>
+        <div>
+            <button id="increment4">Increment</button>
+            <button id="decrement4">Decrement</button>
+            <button id="animation4">Animation</button>
+        </div>
+        <br>
+        <div class="slidecontainer">
+            Ambient reflectivity coefficient (Ka) <br>
+            0<input type="range" min="0" max="1" step="0.01" value="0.1" id="Ka4">1 &nbsp;&nbsp;&nbsp;&nbsp;Value =
+            <span id="Kav4"></span><br>
+
+            Diffuse reflectivity coefficient (Kd)<br>
+            0<input type="range" min="0" max="1" step="0.01" value="0.6" id="Kd4">1 &nbsp;&nbsp;&nbsp;&nbsp;Value =
+            <span id="Kdv4"></span><br>
+
+            Specular reflectivity coefficient (Ks)<br>
+            0<input type="range" min="0" max="1" step="0.01" value="1.0" id="Ks4">1 &nbsp;&nbsp;&nbsp;&nbsp;Value =
+            <span id="Ksv4"></span><br>
+
+            Shininess(α)<br>
+            0<input type="range" min="0" max="100" value="100" id="α4">100 &nbsp;&nbsp;Value = <span
+                id="αv4"></span><br>
+
+            Emitted radiance(Le)<br>
+            0<input type="range" min="0" max="2" step="0.01" value="1.35" id="Le4">2 &nbsp;&nbsp;&nbsp;&nbsp;Value =
+            <span id="Lev4"></span><br>
+        </div>
+        <hr class="dashed">
+
+
+        <h2>Part 5 - Use Phong shading by moving your implementation of the Phong reflection model to the fragment
+            shader</h2>
+
+        <canvas id="gl-canvas5" width="512" height="512">
+            Web browser does not support HTML5’s canvas element.
+        </canvas><br>
+        <div>
+            <button id="increment5">Increment</button>
+            <button id="decrement5">Decrement</button>
+            <button id="animation5">Animation</button>
+        </div>
+        <br>
+        <div class="slidecontainer">
+            Ambient reflectivity coefficient (Ka) <br>
+            0<input type="range" min="0" max="1" step="0.01" value="0.1" id="Ka5">1 &nbsp;&nbsp;&nbsp;&nbsp;Value =
+            <span id="Kav5"></span><br>
+
+            Diffuse reflectivity coefficient (Kd)<br>
+            0<input type="range" min="0" max="1" step="0.01" value="0.6" id="Kd5">1 &nbsp;&nbsp;&nbsp;&nbsp;Value =
+            <span id="Kdv5"></span><br>
+
+            Specular reflectivity coefficient (Ks)<br>
+            0<input type="range" min="0" max="1" step="0.01" value="1.0" id="Ks5">1 &nbsp;&nbsp;&nbsp;&nbsp;Value =
+            <span id="Ksv5"></span><br>
+
+            Shininess(α)<br>
+            0<input type="range" min="0" max="100" value="100" id="α5">100 &nbsp;&nbsp;Value = <span
+                id="αv5"></span><br>
+
+            Emitted radiance(Le)<br>
+            0<input type="range" min="0" max="2" step="0.01" value="1.35" id="Le5">2 &nbsp;&nbsp;&nbsp;&nbsp;Value =
+            <span id="Lev5"></span><br>
+        </div>
+        <ul>
+            <li><b>QUESTION:</b> Is Gouraud or Phong shading the best method for simulating highlight? Explain.</li>
+            <li><b>ANSWER:</b> Phong shading is the best method; the lighting calculations are done in the fragment shader,
+                this means that the computation happens for every pixel.
+                Results in a smooth and more realistic highlight.
+                Gouraud shading computes lighting for every vertex, which is not as realistic as the phong shading (for
+                small amount of vertices) altough it's cheaper.</li>
+        </ul>
+        <hr class="dashed">
+
+
+        <h2>Part 6 - Answer the following questions:</h2>
+        <ul style="text-align: center; font-size: large; font-weight:bold;">
+            <li><b>1 </b>What is the difference between Phong shading and Phong lighting (the Phong reflection model)?
+            </li>
+            <br>
+            <li><b>2 </b>What is the difference between flat shading, Gouraud shading, and Phong shading? List pros and
+                cons of each.</li>
+            <br>
+            <li><b>3 </b>What is the difference between a directional light and a point light?</li>
+            <br>
+            <li><b>4 </b>Does the eye position influence the shading of an object in any way?</li>
+            <br>
+            <li><b>5 </b>What is the effect of setting the specular term to (0,0,0)?</li>
+            <br>
+            <li><b>6 </b>What is the effect of increasing the shininess exponent (𝛼𝛼)?</li>
+            <br>
+            <li><b>7 </b>In what coordinate space did you compute the lighting?</li>
+        </ul>
+
+        <ul>
+            <li> <b>1 </b>Phong lighting describes the way a surface reflects light as a combination of the diffuse
+                reflection of rough surfaces with the specular reflection of shiny surfaces.It also includes an ambient
+                term to account for the small amount of light that is scattered about the entire scene.<br>The Phong
+                shading model evaluates the illumination model(e.g. the Phong reflection model) at every pixel and uses
+                the result directly as the pixel color.
+                In depth "evaluate" means that a normal vector is linearly interpolated across the surface of the
+                polygon from the polygon's vertex normal.The surface normal is then interpolated and normalized at every
+                pixel.</li>
+            <br>
+            <li><b>2 </b>Flat shading is the simplest shading model. Each rendered polygon has a single normal vector;
+                shading for the entire polygon is constant across the surface of the polygon. <br>Pros: Fast, a single
+                computation per polygon<br>Cons: Inaccurate and with a small polygon count, this gives curved surfaces a
+                faceted look. <br><br>Phong shading is the most sophisticated method. Each rendered polygon has one
+                normal vector per vertex; shading is performed by interpolating the vectors across the surface and
+                computing the color for each point of interest. Interpolating the normal vectors gives a reasonable
+                approximation to a smoothly-curved surface while using a limited number of polygons.Pros:The results are
+                substantially more realistic, and it is more likely to capture specular highlights.Cons: The
+                computational time is very high.<br><br>Gourard shading is in between the two: like Phong shading, each
+                polygon has one normal vector per vertex, but instead of interpolating the vectors, the color of each
+                vertex is computed and then interpolated across the surface of the polygon.<br>Pros: It is cheaper to do
+                than Phong shading and it provides a smoother appearance than flat shading<br>Cons: Because the lighting
+                gets calculated at a vertex level, you will see specular highlights appear and disappear quickly,
+                appearance of Mach bands.<br><br></li>
+            <li><b>3 </b>A directional light mimics the lighting that you would get from the sun. Directional lights
+                emit parallel light rays in a single direction but the light reaches out into infinity. You can think of
+                a directional light as a giant flash light very far away from your objects, always centered and it never
+                dies off.<br><br>Point lights are the most common light types found in 3D software. A point light is
+                very similar to an incandescent light bulb that emits light in all directions. You can think of a point
+                light as a sphere of light filling an area. Objects closer to the light will be brighter, and objects
+                further away will be darker.<br><br></li>
+            <li><b>4 </b>It influences the shading relating to the highlights. This happens since the Phong model is
+                dependent on the camera's location.<br><br></li>
+            <li><b>5 </b>There won't be any specular highlights.<br><br></li>
+            <li><b>6 </b>The reflected light is concentrated in a narrower region centered on the angle of a perfect
+                reflector, in other words the higher the shininess value of an object, the more it properly reflects the
+                light instead of scattering it all around and thus the smaller the highlight becomes.<br><br></li>
+            <li><b>7 </b>In the eye space.</li>
+        </ul>
+
+       <!--Part 1 -->
+
+        <script id="vertex-shader-1" type="x-shader/x-vertex">
+        attribute vec4 a_Position; 
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+        }
+    </script>
+        <script id="fragment-shader-1" type="x-shader/x-fragment">
+        precision mediump float;
+        void main(){
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        }
+    </script>
+        <script type="text/javascript" src="W04P1.js"></script>
+
+       <!--Part 2 -->
+
+        <script id="vertex-shader-2" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Color; 
+        varying vec4 v_Color; 
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+            v_Color = (a_Position*0.5) +0.5; 
+        }
+    </script>
+        <!-- TO DO SECOND METHOD OF PART 2 ABOVE USE v_Color = a_Color -->
+
+
+        <script id="fragment-shader-2" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+    </script>
+        <script type="text/javascript" src="W04P2.js"></script>
+
+       <!--Part 3 -->
+
+        <script id="vertex-shader-3" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Normal; 
+        varying vec4 v_Color; 
+
+        uniform vec4 diffuseProduct;
+        uniform vec4 lightPosition;
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        uniform vec4 lightEmission;
+
+        void main() {
+            vec3 pos = (modelViewMatrix * a_Position).xyz;
+            
+            vec3 L;
+
+            vec3 N = normalize(vec4(a_Normal.xyz, 0).xyz);
+
+            if (lightPosition.w == 0.0)
+                L = normalize(lightPosition.xyz);
+            else
+                L = normalize(lightPosition.xyz - pos);
+
+            
+            float Kd = max(dot(L, N), 0.0);
+            vec4 diffuse = Kd * diffuseProduct;
+
+
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+            v_Color = diffuse* lightEmission;
+            v_Color.a = 1.0; 
+        }
+        </script>
+        <script id="fragment-shader-3" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+            </script>
+        <script type="text/javascript" src="W04P3.js"></script>
+
+       <!--Part 4 -->
+
+        <script id="vertex-shader-4" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Normal;
+        varying vec4 v_Color; 
+
+        uniform vec4 diffuseProduct;
+        uniform vec4 lightPosition;
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        uniform mat3 normalMatrix;
+
+        uniform float Ka, Ks, Kd, alpha, le;
+
+        void main() {
+
+            vec3 pos = (modelViewMatrix * a_Position).xyz;
+            vec3 light = lightPosition.xyz;
+
+            vec3 L = normalize(light - pos);
+            vec3 E = normalize(-pos);
+            vec3 H = normalize(L + E);
+            // Transform vertex normal into eye coordinates
+            vec3 N = normalize(vec4(a_Normal.xyz, 0).xyz);
+            
+            //Possible solution nr2
+            //vec3 N = normalize( normalMatrix * a_Normal.xyz);
+
+            float dif = max(dot(L, N), 0.0);
+
+            float spec = pow(max(dot(N, H), 0.0), alpha);
+
+
+            vec4 ambient = vec4((Ka * vec3(le)), 1.0);
+            vec4 specular = vec4((Ks * spec * vec3(le)), 1.0);
+            vec4 diffuse = vec4((Kd * dif *vec3(le)), 1.0) * diffuseProduct;
+            
+            if( dot(L, N) < 0.0 ) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            }  
+
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+            v_Color = ambient + specular + diffuse; 
+            
+        }
+            </script>
+        <script id="fragment-shader-4" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+            </script>
+        <script type="text/javascript" src="W04P4.js"></script>
+
+       <!--Part 5 -->
+
+        <script id="vertex-shader-5" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Normal;
+        varying vec3 N, L, E;
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectMatrix;
+        uniform vec4 lightPosition;
+
+        void main(){
+
+            vec3 pos = (modelViewMatrix * a_Position).xyz;
+            vec3 light = lightPosition.xyz;
+            L = normalize(light - pos);
+            E = normalize(-pos);
+            N = normalize(vec4(a_Normal.xyz, 0).xyz);
+       
+
+            gl_Position = projectMatrix * modelViewMatrix * a_Position;
+
+        }
+            </script>
+        <script id="fragment-shader-5" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec4 diffuseProduct;
+        varying vec3 N, L, E;
+        
+        uniform float Ka, Ks, Kd, alpha, le;
+
+        void main(){
+
+            vec4 v_Color;
+
+            vec3 H = normalize(L + E);
+
+            float dif = max(dot(L, normalize(N)), 0.0);
+
+            float spec = pow(max(dot(normalize(N), H), 0.0), alpha);
+
+
+            vec4 ambient = vec4((Ka * vec3(le)), 1.0);
+            vec4 specular = vec4((Ks * spec * vec3(le)), 1.0);
+            vec4 diffuse = vec4((Kd * dif *vec3(le)), 1.0) * diffuseProduct;
+            
+            if( dot(L, N) < 0.0 ) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            } 
+
+            v_Color = ambient + specular + diffuse; 
+
+
+            gl_FragColor = v_Color;
+        }
+        </script>
+        <script type="text/javascript" src="W04P5.js"></script>
+</body>
+
+
+</html>

@@ -1,0 +1,314 @@
+<head>
+    <meta name="author" content="Carlos Ventura">
+    <script type="text/javascript" src="../Utilities/initShaders.js"></script>
+    <script type="text/javascript" src="../Utilities/MV.js"></script>
+    <script type="text/javascript" src="../Utilities/webgl-utils.js"></script>
+    <meta charset="UTF-8">
+    <style>
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        body {
+            background-image: url('../BG.png');
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+
+            font-family: Arial;
+        }
+
+        button {
+            font-weight: bold;
+            font-size: 20;
+        }
+
+        canvas {
+            padding: 0;
+            margin: auto;
+            display: block;
+        }
+
+        hr.dashed {
+            border-top: 3px dashed white;
+        }
+
+        ul {
+            text-align: left;
+            list-style-position: inside;
+            font-size: larger
+        }
+
+        div {
+            width: 25%;
+            margin: 0 auto;
+            font-weight: bolder;
+            font-size: 20;
+        }
+    </style>
+</head>
+
+<html>
+
+
+
+<body>
+    <h2 style="text-align: center;">WORKSHEET 6: Texture mapping</h2>
+    <hr class="dashed">
+
+    <h2>Part 1</h2>
+    <canvas id="gl-canvas1" width="512" height="512">
+        Web browser does not support HTML5’s canvas element.
+    </canvas>
+
+
+    <hr class="dashed">
+    <h2>Part 2</h2>
+    <canvas id="gl-canvas2" width="512" height="512">
+        Web browser does not support HTML5’s canvas element.
+    </canvas>
+    <br>
+    <div>
+        TEXTURE WRAPPING MODE <br>
+        <select id="wrap" style="font-size: 20;">
+            <option value="0" selected="selected">Repeat</option>
+            <option value="1">Clamp-to-Edge</option>
+            <option value="2">Mirrored-Repeat</option>
+        </select>
+        <br>
+
+        TEXTURE FILTERING MODE - Magnification <br>
+        <select id="filter-M" style="font-size: 20;">
+            <option sty value="0" selected="selected">Nearest</option>
+            <option value="1">Linear</option>
+        </select>
+        <br>
+
+        TEXTURE FILTERING MODE - Minification <br>
+        <select id="filter-m" style="font-size: 20;">
+            <option sty value="0" selected="selected">Nearest</option>
+            <option value="1">Linear</option>
+            <option value="2">MipMap(NN)</option>
+            <option value="3">MipMap(LN)</option>
+            <option value="4">MipMap(NL)</option>
+            <option value="5">MipMap(LL)</option>
+        </select>
+    </div>
+
+    <ul>
+        <li><b>QUESTION:</b> Explain the effect of the different filtering modes and their influence on texture
+            magnification and minification issues.</li>
+        <li><b>ANSWER: </b>
+            Filtering is done by minification and magnification. In minifications the texture gets shrunk compared to
+            the natural resolution. Magnification makes the texture appear bigger than the actual size/resolution.
+
+
+            <p>
+                There are three methods to do texture filtering:NEAREST, LINEAR and MipMap; NEAREST and LINEAR can be
+                used both on minification and magnification while MipMap can only be used on minification.
+            <p>
+                NEAREST: Means that each texture coordinate chooses the nearest texel value. In this example this means
+                that eithers chooses black or white. This method will make the image look more pixelated, but can be
+                useful when trying to get pixel perfection.
+            </p>
+            <p>
+                LINEAR: Interpolate four color samples taken around the current texel. Returns a more blurry result if looking at the nearest points of the image.
+            </p>
+            <p>
+                MipMap: Using mipmaps reduces aliasing and jaggies/artifcats caused by mapping a large texture onto a
+                small are in screen space. Produces a more blurred image. The filtering required in real time will be less demanding. To sum up MipMap improves image quality(stated on the internet but might be relative duo to the introduction of some blur) and increases performance.
+            </p>
+
+            NEAREST_MIPMAP_NEAREST: Take one sample closest to the current texel and closest to the current mip
+            level.<br>
+
+            NEAREST_MIPMAP_LINEAR: Take one sample from the two closest mip levels. Interpolate the two samples.<br>
+
+            LINEAR_MIPMAP_NEAREST: Interpolate four color samples around the current texel, taken from the closest
+            mip level.<br>
+
+            LINEAR_MIPMAP_LINEAR: Interpolate four samples from the two closest mip levels.<br>
+        </li>
+    </ul>
+
+    <hr class="dashed">
+    <h2>Part 3</h2>
+    <canvas id="gl-canvas3" width="720" height="720">
+        Web browser does not support HTML5’s canvas element.
+    </canvas>
+    <div>
+        <button id="increment3">Increment</button>
+        <button id="decrement3">Decrement</button>
+        <button id="animation3">Animation</button>
+        <br><br>
+
+        TEXTURE FILTERING MODE - Magnification <br>
+        <select id="filter-M2" style="font-size: 20;">
+            <option sty value="0" selected="selected">Nearest</option>
+            <option value="1">Linear</option>
+        </select>
+        <br>
+
+        TEXTURE FILTERING MODE - Minification <br>
+        <select id="filter-m2" style="font-size: 20;">
+            <option sty value="0" selected="selected">Nearest</option>
+            <option value="1">Linear</option>
+            <option value="2">MipMap(NN)</option>
+            <option value="3">MipMap(LN)</option>
+            <option value="4">MipMap(NL)</option>
+            <option value="5">MipMap(LL)</option>
+        </select>
+    </div>
+
+    <ul>
+        <li><b>QUESTION:</b> Choose a filtering option that betters these minification issues without too much blurring
+            of the texture. Explain your choice.</li>
+        <li><b>ANSWER:</b> Both the filtering methods NEAREST and LINEAR expose a lot of "flickering"/aliasing. To check how much blur difference would happen from this two methods to mipmapping the rotation of the world was stopped 
+            and my attention was focused on small point spaces. By doing this is quite noticable that when changing to mipmap, filtering blurriness becomes visible(it's subtle) and the aliasing disappears. My final answer would be using a mipmap.
+  The following arguments will justify this choice. From a general point of view the blurriness of the mipmap is unnoticeable to the human naked eye, if not paid close attention. It's the most pleasant image. It's also possible that one may not understand that the image suddently got a bit blurred after changing from linear/nearest to mipmap.
+		The difference in the aliasing from the methods NEAREST and LINEAR is minor, this means that there's no middle ground between aliasing and blurriness which propels my decision for mipmap method.<br><br>NOTE: My overall approach to this problem was reducing the alisasing as much as possible.
+        </li>
+    </ul>
+
+   <!--Part 1 -->
+
+    <script id="vertex-shader-1" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Color;
+        attribute vec2 a_TexCoord;
+        
+        varying vec4 v_Color; 
+        varying vec2 v_TexCoord;
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+           
+            v_TexCoord = a_TexCoord;
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position;
+        }
+
+    </script>
+    <script id="fragment-shader-1" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying vec4 v_Color;
+        varying vec2 v_TexCoord;
+        
+        uniform sampler2D texMap;
+        
+        void main(){
+            gl_FragColor = texture2D(texMap, v_TexCoord);
+        }
+
+    </script>
+    <script type="text/javascript" src="W06P1.js"></script>
+
+   <!--Part 2 -->
+
+    <script id="vertex-shader-2" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Color;
+        attribute vec2 a_TexCoord;
+        
+        varying vec4 v_Color; 
+        varying vec2 v_TexCoord;
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+            v_Color = a_Color;
+            v_TexCoord = a_TexCoord;
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position;
+        }
+    </script>
+
+
+    <script id="fragment-shader-2" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying vec4 v_Color;
+        varying vec2 v_TexCoord;
+        
+        uniform sampler2D texMap;
+        
+        void main(){
+            gl_FragColor = v_Color * texture2D(texMap, v_TexCoord);
+        }
+    </script>
+    <script type="text/javascript" src="W06P2.js"></script>
+
+   <!--Part 3 -->
+
+       <script id="vertex-shader-3" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Normal; 
+
+        varying vec4 v_Normal;
+        varying vec4 v_Color; 
+
+        uniform vec4 diffuseProduct;
+        uniform vec4 lightPosition;
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        uniform vec4 lightEmission;
+
+        void main() {
+
+            v_Normal = a_Normal;
+
+            vec3 pos = (modelViewMatrix * a_Position).xyz;
+            
+            vec3 L;
+
+            vec3 N = normalize(modelViewMatrix * a_Normal).xyz;
+
+            if (lightPosition.w == 0.0)
+                L = normalize(lightPosition.xyz);
+            else
+                L = normalize(lightPosition.xyz - pos);
+
+            
+            float Kd = max(dot(L, N), 0.0);
+            vec4 diffuse = Kd * diffuseProduct;
+
+
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+            v_Color = diffuse* lightEmission;
+            v_Color.a = 1.0; 
+        }
+
+            </script>
+    <script id="fragment-shader-3" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying vec4 v_Color;
+        varying vec4 v_Normal;
+
+        uniform sampler2D texMap;
+
+        void main(){
+
+            vec4 N = normalize(v_Normal);
+
+            float pi = 3.14159265358979323846;
+            float u = 1.0 - atan(N.z, N.x)/(2.0*pi);
+            float v = acos(N.y)/pi;
+		    
+            vec2 texCoord = vec2(u,v);
+
+            gl_FragColor = v_Color * texture2D(texMap, texCoord);
+
+        }
+
+            </script>    <script type="text/javascript" src="W06P3.js"></script>
+</body>
+
+
+</html>
