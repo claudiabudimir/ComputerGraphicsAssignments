@@ -109,7 +109,7 @@ function init() {
         var model = initVertexBuffers(gl3, program);
 
         // Start reading the OBJ file
-        readOBJFile(obj_fn, gl3, model, 1.8, true);
+        readOBJFile(obj_fn, gl3, model, 1.0, true);
 
         return model;
     }
@@ -125,7 +125,6 @@ function init() {
 
     var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
     pj = perspective(45.0, 1, 0.1, 10);
-    //pj = mult(pj, translate(0.0, 0.0, -100.0)); // to move the camera away from the cube
     gl3.uniformMatrix4fv(projectMatrix, gl3.FALSE, flatten(pj));
 
     var modelViewMatrixLoc = gl3.getUniformLocation(program, "modelViewMatrix");
