@@ -1,4 +1,4 @@
-var obj_fn = 'monkey.obj'
+var obj_fn = 'final_pokeball.obj'
 
 var g4_objDoc = null; // Info parsed from OBJ file
 var g4_drawingInfo = null; // Info for drawing the 3D model with WebGL
@@ -127,11 +127,8 @@ function init() {
 
     gl4.uniform4fv(gl4.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
 
-
-
-
     var projectMatrix = gl4.getUniformLocation(program, 'projectMatrix');
-    var pj = perspective(fovy, aspect, near, far);
+    pj = perspective(45.0, 1, 0.1, 10);
     gl4.uniformMatrix4fv(projectMatrix, gl4.FALSE, flatten(pj));
 
     var modelViewMatrixLoc = gl4.getUniformLocation(program, "modelViewMatrix");
@@ -139,9 +136,6 @@ function init() {
     gl4.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
     var theta = 0.0;
-
-    modelViewMatrix = lookAt(eye, at, up);
-    gl4.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
     function render() {
         window.requestAnimFrame(render);
