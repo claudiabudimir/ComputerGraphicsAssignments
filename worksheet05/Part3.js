@@ -124,7 +124,7 @@ function init() {
     var far = 5.0;
 
     var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
-    var pj = perspective(fovy, aspect, near, far);
+    pj = perspective(45.0, 1, 0.1, 10);
     //pj = mult(pj, translate(0.0, 0.0, -100.0)); // to move the camera away from the cube
     gl3.uniformMatrix4fv(projectMatrix, gl3.FALSE, flatten(pj));
 
