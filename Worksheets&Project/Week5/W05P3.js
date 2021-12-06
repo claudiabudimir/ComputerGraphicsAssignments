@@ -1,4 +1,4 @@
-var obj_fn = 'teapot.obj'
+var obj_fn = 'final_pokeball.obj'
 
 var g3_objDoc = null; // Info parsed from OBJ file
 var g3_drawingInfo = null; // Info for drawing the 3D model with WebGL
@@ -114,6 +114,16 @@ function init() {
         return model;
     }
 
+    let radius = 6;
+    let eye = vec3(radius*Math.sin(program.theta)*Math.cos(program.phi), radius*Math.sin(program.theta)*Math.sin(program.phi), radius*Math.cos(program.theta));
+
+    let modelViewMatrix = translate(0,0,0);
+    modelViewMatrix = mult(modelViewMatrix,lookAt(eye, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0)));
+
+    let projectionMatrix = 
+
+    program.write(modelViewMatrix,"modelViewMatrix");
+    program.write(projectionMatrix,"projectionMatrix");
     var eye = vec3(5, 0, 0);
     var at = vec3(0.0, 0.0, 0.);
     const up = vec3(0.0, 1.0, 0.0);
@@ -121,7 +131,7 @@ function init() {
     var fovy = 45.0; //angl3es in degrees
     var aspect = canvas.width / canvas.height;
     var near = 0.1;
-    var far = 50.0;
+    var far = 100.0;
 
 
     var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
