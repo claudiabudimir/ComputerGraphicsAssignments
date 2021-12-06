@@ -114,16 +114,6 @@ function init() {
         return model;
     }
 
-    let radius = 6;
-    let eye = vec3(radius*Math.sin(program.theta)*Math.cos(program.phi), radius*Math.sin(program.theta)*Math.sin(program.phi), radius*Math.cos(program.theta));
-
-    let modelViewMatrix = translate(0,0,0);
-    modelViewMatrix = mult(modelViewMatrix,lookAt(eye, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0)));
-
-    let projectionMatrix = 
-
-    program.write(modelViewMatrix,"modelViewMatrix");
-    program.write(projectionMatrix,"projectionMatrix");
     var eye = vec3(5, 0, 0);
     var at = vec3(0.0, 0.0, 0.);
     const up = vec3(0.0, 1.0, 0.0);
