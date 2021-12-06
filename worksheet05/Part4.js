@@ -1,9 +1,9 @@
 var obj_fn = 'monkey.obj'
 
-var g4_objDoc = null; // Info parsed from OBJ file
-var g4_drawingInfo = null; // Info for drawing the 3D model with WebGL
+var g4_objDoc = null;
+var g4_drawingInfo = null;
 
-// Create a buffer object and perform the initial configuration
+//Initial configuration of buffers
 function initVertexBuffers(gl4, program) {
 
     var o = new Object();
@@ -18,30 +18,26 @@ function initVertexBuffers(gl4, program) {
 
 function createEmptyArrayBuffer(gl4, a_attribute, num, type) {
 
-    var buffer = gl4.createBuffer(); // Create a buffer object
-
+    var buffer = gl4.createBuffer(); 
     gl4.bindBuffer(gl4.ARRAY_BUFFER, buffer);
     gl4.vertexAttribPointer(a_attribute, num, type, false, 0, 0);
-    gl4.enableVertexAttribArray(a_attribute); // Enable the assignment
-
+    gl4.enableVertexAttribArray(a_attribute);
     return buffer;
 }
 
 function onReadComplete(gl4, model, objDoc) {
-    // Acquire the vertex coordinates and colors from OBJ file
+    // Extract vertex coordinates and colors from OBJ file
     var drawingInfo = objDoc.getDrawingInfo();
 
-    // Write date into the buffer object
+    // Write date into the buffers 
     gl4.bindBuffer(gl4.ARRAY_BUFFER, model.vertexBuffer);
     gl4.bufferData(gl4.ARRAY_BUFFER, drawingInfo.vertices, gl4.STATIC_DRAW);
-
     gl4.bindBuffer(gl4.ARRAY_BUFFER, model.normalBuffer);
     gl4.bufferData(gl4.ARRAY_BUFFER, drawingInfo.normals, gl4.STATIC_DRAW);
-
     gl4.bindBuffer(gl4.ARRAY_BUFFER, model.colorBuffer);
     gl4.bufferData(gl4.ARRAY_BUFFER, drawingInfo.colors, gl4.STATIC_DRAW);
 
-    // Write the indices to the buffer object
+    // Write indices to the buffer
     gl4.bindBuffer(gl4.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
     gl4.bufferData(gl4.ELEMENT_ARRAY_BUFFER, drawingInfo.indices, gl4.STATIC_DRAW);
 
@@ -56,8 +52,8 @@ function readOBJFile(fileName, gl4, model, scale, reverse) {
             onReadOBJFile4(request.responseText, fileName, scale, reverse);
         }
     }
-    request.open('GET', fileName, true); // Create a request to get file
-    request.send(); // Send the request
+    request.open('GET', fileName, true);
+    request.send();
 }
 
 function onReadOBJFile4(fileString, fileName, scale, reverse) {
@@ -115,18 +111,9 @@ function init() {
     var eye = vec3(5, 0, 0);
     var at = vec3(0.0, 0.0, 0.);
     const up = vec3(0.0, 1.0, 0.0);
-
-    var fovy = 45.0; //angl4es in degrees
-    var aspect = canvas.width / canvas.height;
-    var near = 0.1;
-    var far = 50.0;
-
     var lightPosition = vec4(0.0, 0.0, 1.0, 0.0);
 
     gl4.uniform4fv(gl4.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
-
-
-
 
     var projectMatrix = gl4.getUniformLocation(program, 'projectMatrix');
     pj = perspective(45.0, 1, 0.1, 10);
@@ -137,16 +124,10 @@ function init() {
     gl4.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
     var theta = 0.0;
-
-    modelViewMatrix = lookAt(eye, at, up);
-    gl4.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-
     function render() {
         window.requestAnimFrame(render);
 
         if (!g4_drawingInfo && g4_objDoc && g4_objDoc.isMTLComplete()) {
-            // OBJ and all MTLs are available
-            console.log("IM HEREEE")
             g4_drawingInfo = onReadComplete(gl4, model, g4_objDoc);
         }
         if (!g4_drawingInfo)
