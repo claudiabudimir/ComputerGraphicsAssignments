@@ -1,4 +1,4 @@
-var obj_fn = 'teapot.obj'
+var obj_fn = 'cap.obj'
 
 var g4_objDoc = null; // Info parsed from OBJ file
 var g4_drawingInfo = null; // Info for drawing the 3D model with WebGL
