@@ -114,7 +114,7 @@ function init() {
         return model;
     }
 
-    var eye = vec3(5, 0, 0);
+    var eye = vec3(50, 0, 0);
     var at = vec3(0.0, 0.0, 0.);
     const up = vec3(0.0, 1.0, 0.0);
 
