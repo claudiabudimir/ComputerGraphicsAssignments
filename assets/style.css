@@ -40,7 +40,7 @@ button {
 /* Create three equal columns that floats next to each other */
 .column {
     float: left;
-    width: 33.33%;
+    width: 33.34%;
     padding: 10px;
     height: 100px;
     text-align: center;
