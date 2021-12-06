@@ -4,8 +4,7 @@ h2 {
 }
 
 body {
-    background-image: url("background.jpg");
-    color: white;
+    color: black;
     height: 100%;
 
     /* Center and scale the image nicely */
@@ -40,7 +39,7 @@ button {
 /* Create three equal columns that floats next to each other */
 .column {
     float: left;
-    width: 33.34%;
+    width: 33.33%;
     padding: 10px;
     height: 100px;
     text-align: center;
