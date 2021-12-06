@@ -1,4 +1,4 @@
-var obj_fn = 'monkey.obj'
+var obj_fn = 'final_pokeball.obj'
 
 var g4_objDoc = null; // Info parsed from OBJ file
 var g4_drawingInfo = null; // Info for drawing the 3D model with WebGL
