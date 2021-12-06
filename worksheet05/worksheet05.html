@@ -1,82 +1,133 @@
 <!DOCTYPE html>
-<meta charset="UTF-8">
-<head>
-    <script id="vertex-shader" type="x-shader/x-vertex">
-    attribute vec4 vPosition;
-    attribute vec4 vNormal;
+<html>
 
-    varying vec4 fColor;
+    <head>
+        <script type="text/javascript" src="../common/webgl-utils.js"></script>
+        <script type="text/javascript" src="../common/initShaders.js"></script>
+        <script type="text/javascript" src="../common/MV.js"></script>
+        <link rel="stylesheet" href="../assets/style.css">
+    </head>
 
-    uniform mat4 modelViewMatrix;
-    uniform mat4 projectionMatrix;
+    <body>
+        <h1>Worksheet 5: Rendering a triangle mesh</h1>
 
-    uniform vec4 diffuseCoefficient;
-    uniform float ambientCoefficient;
-    uniform vec3 lightAmbient; //L_a
-    uniform vec4 lightPosition; //i_e
-    uniform vec3 lightEmission; //L_e
+        <h2>Part 3: Load an OBJ file</h2>
+        <canvas id="gl-canvas3" width="512" height="512"></canvas>
+        <br>
 
-    void main()
-    {
-        gl_Position =  projectionMatrix * modelViewMatrix * vPosition;
-
-        vec4 pos = modelViewMatrix * vPosition;
-        vec3 w_i = lightPosition.w == 0.0 ? normalize(-lightPosition.xyz) : normalize(lightPosition.xyz - pos.xyz);
-        vec3 norm = normalize(vNormal.xyz);
-        float cos_phi = dot(norm, w_i);
-
-        //We assume V = 1, therefore L_i = L_e
-        vec3 light_incident = lightEmission;
-
-        //L_d
-        vec3 light_diffuse = diffuseCoefficient.xyz * light_incident * max(cos_phi, 0.0);
-
-        //L_o
-        vec3 light_out = light_diffuse + ambientCoefficient * lightAmbient;
-
-        fColor = vec4(light_out, diffuseCoefficient.a);
-    }
-    </script>
-    <script id="fragment-shader" type="x-shader/x-fragment">
-    precision mediump float;
-
-    varying vec4 fColor;
-    void main() {
-        gl_FragColor = fColor;
-    }
-
-    </script>
-    <script type="text/javascript" src="../../Common/library.js"></script>
-    <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
-    <script type="text/javascript" src="../../Common/initShaders.js"></script>
-    <script type="text/javascript" src="../../Common/MV.js"></script>
-    <script type="text/javascript" src="../../Common/OBJParser.js"></script>
-    <script type="text/javascript" src="script.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-            crossorigin="anonymous"></script>
-</head>
-<body>
-<nav class="navbar navbar-light bg-dark">
-    <span class="navbar-brand mb-0 h1 text-white"><a href="../../">02561 - Computer Graphics</a></span>
-</nav>
-<div class="text-center">
-    <canvas id="gl-canvas" width="512" height="512">
-        Sorry your web browser does not support HTML5s canvas element.
-    </canvas>
-    <div class="row justify-content-center">
-        <div class="col-5">
-            <button onclick="program.toggleAnimation()" class="btn btn-primary">Toggle orbit</button>
+        <h2>Part 4: Shade the object using Phong shading and the Phong illumination model</h2>
+        <canvas id="gl-canvas4" width="512" height="512"></canvas>
+        <br>
+        <div style="text-align: center">
+            <button id="incr_button5">Increment</button>
+            <button id="decr_button5">Decrement</button>
+            <button id="orbit_button3">Enable/Diable Orbit view</button>
         </div>
-    </div>
-</div>
-</body>
-</html>
+        <br>
+        <div class="container" style="text-align: center;">
+
+            0<input type="range" min="0" max="1" step="0.01" value="0.1"
+                id="Ka5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ka5">Ambient
+                reflectivity coefficient (Ka) = </label>
+            <span id="Kav5"></span><br><br>
+
+            0<input type="range" min="0" max="1" step="0.01" value="0.6"
+                id="Kd5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Kd5">Diffuse
+                reflectivity coefficient (Kd) = </label>
+            <span id="Kdv5"></span><br><br>
+
+            0<input type="range" min="0" max="1" step="0.01" value="1.0"
+                id="Ks5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ks5">Specular
+                reflectivity coefficient (Ks) = </label>
+            <span id="Ksv5"></span><br><br>
+
+            0<input type="range" min="0" max="100" value="100" id="α5">100
+            &nbsp;&nbsp;<label for="α5">Shininess(α) = </label> <span id="αv5"></span><br><br>
+            0<input type="range" min="0" max="2" step="0.01" value="1.35"
+                id="Le5">2 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Le5">Light
+                emmision(Le) = </label>
+            <span id="Lev5"></span><br><br>
+        </div>
+        <br><br><br>
+        <!-- Shader's Scripts -->
+   <!--Part 3 -->
+
+    <script id="vertex-shader-3" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Normal; 
+        attribute vec4 a_Color;
+
+        varying vec4 v_Color;
+        
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectMatrix;
+
+        void main() {
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+            v_Color = a_Color;
+        }
+     
+            </script>
+    <script id="fragment-shader-3" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+      
+            </script>
+    <script type="text/javascript" src="Part3.js"></script>
+
+    <!--Part 4 -->
+    <script id="vertex-shader-4" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 v_Normal;
+        varying vec3 N, L, E;
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectMatrix;
+        uniform vec4 lightPosition;
+
+        void main(){
+            gl_Position = projectMatrix * modelViewMatrix * a_Position;
+
+            vec3 pos = (modelViewMatrix * a_Position).xyz;
+            vec3 light = lightPosition.xyz;
+            L = normalize(light - pos);
+            E = normalize(-pos);
+            N = normalize(v_Normal.xyz);
+        }
+    </script>
+    <script id="fragment-shader-4" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec4 diffuseProduct;
+        varying vec3 N, L, E;
+        
+        uniform float Ka, Ks, Kd, alpha, le;
+
+        void main(){
+
+            vec4 v_Color;
+
+            vec3 H = normalize(L + E);
+
+            float dif = max(dot(L, normalize(N)), 0.0);
+
+            float spec = pow(max(dot(normalize(N), H), 0.0), alpha);
+
+
+            vec4 ambient = vec4((Ka * vec3(le)), 1.0);
+            vec4 specular = vec4((Ks * spec * vec3(le)), 1.0);
+            vec4 diffuse = vec4((Kd * dif *vec3(le)), 1.0) * diffuseProduct;
+            
+            if( dot(L, N) < 0.0 ) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            } 
+
+            v_Color = ambient + specular + diffuse; 
+
+
+            gl_FragColor = v_Color;
+        }
+        </script>
+    <script type="text/javascript" src="Part4.js"></script>
+    </html>
