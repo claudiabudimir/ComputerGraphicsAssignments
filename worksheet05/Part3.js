@@ -120,7 +120,7 @@ function init() {
 
     var fovy = 45.0; //angl3es in degrees
     var aspect = canvas.width / canvas.height;
-    var near = 1.1;
+    var near = 50.1;
     var far = 5.0;
 
     var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
