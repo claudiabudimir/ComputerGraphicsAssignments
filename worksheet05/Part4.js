@@ -131,7 +131,7 @@ function init() {
 
 
     var projectMatrix = gl4.getUniformLocation(program, 'projectMatrix');
-    var pj = perspective(fovy, aspect, near, far);
+    pj = perspective(45.0, 1, 0.1, 10);
     gl4.uniformMatrix4fv(projectMatrix, gl4.FALSE, flatten(pj));
 
     var modelViewMatrixLoc = gl4.getUniformLocation(program, "modelViewMatrix");
