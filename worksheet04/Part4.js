@@ -172,7 +172,7 @@ function init() {
             rotateAroundOrbit = true;//start rotation around orbit
     });
     
-    var ka_initial = 0.06;
+    var ka_initial = 0.6;
     var kd_initial = 0.6;
     var ks_initial = 0.9;
     var alpha_initial = 96;
