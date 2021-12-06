@@ -1,0 +1,56 @@
+h1,
+h2 {
+    text-align: center;
+}
+
+body {
+    background-image: url("background.jpg");
+    color: white;
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', 'Arial', 'sans-serif';
+}
+
+canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+}
+
+button {
+    font-weight: bold;
+}
+
+
+.menu {
+    width: 45%;
+    margin: 0 auto;
+    font-weight: bolder;
+    font-size: large;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 33.33%;
+    padding: 10px;
+    height: 100px;
+    text-align: center;
+    font-weight: bold;
+    /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
