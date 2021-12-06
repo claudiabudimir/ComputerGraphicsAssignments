@@ -166,63 +166,72 @@ function init() {
 
     render();
 
-    var ka_initial = 0.03;
-    var kd_initial = 0.6;
-    var ks_initial = 0.9;
-    var alpha_initial = 96;
-    var le_initial = 1.20;
+    var Ka = document.getElementById("Ka4");
+    var Kd = document.getElementById("Kd4");
+    var Ks = document.getElementById("Ks4");
+    var s = document.getElementById("s4");
+    var Le = document.getElementById("Le4");
 
-    gl5.uniform1f(gl5.getUniformLocation(program, "Ka"), ka_initial);
-    gl5.uniform1f(gl5.getUniformLocation(program, "Kd"), kd_initial);
-    gl5.uniform1f(gl5.getUniformLocation(program, "Ks"), ks_initial);
-    gl5.uniform1f(gl5.getUniformLocation(program, "alpha"), alpha_initial);
-    gl5.uniform1f(gl5.getUniformLocation(program, "le"), le_initial);
+    var Kav = document.getElementById("Kav4");
+    var Kdv = document.getElementById("Kdv4");
+    var Ksv = document.getElementById("Ksv4");
+    var sv = document.getElementById("sv4");
+    var Lev = document.getElementById("Lev4");
 
-    var Ka = document.getElementById("Ka5");
-    var Kd = document.getElementById("Kd5");
-    var Ks = document.getElementById("Ks5");
-    var α = document.getElementById("α5");
-    var Le = document.getElementById("Le5");
+    var kai = 0.50;
+    var kdi = 0.1;
+    var ksi = 1.0;
+    var alphai = 18;
+    var lei = 1.35;
 
-    var Kav = document.getElementById("Kav5");
-    var Kdv = document.getElementById("Kdv5");
-    var Ksv = document.getElementById("Ksv5");
-    var αv = document.getElementById("αv5");
-    var Lev = document.getElementById("Lev5");
+    gl4.uniform1f(gl4.getUniformLocation(program, "Ka"), kai);
+    gl4.uniform1f(gl4.getUniformLocation(program, "Kd"), kdi);
+    gl4.uniform1f(gl4.getUniformLocation(program, "Ks"), ksi);
+    gl4.uniform1f(gl4.getUniformLocation(program, "alpha"), alphai);
+    gl4.uniform1f(gl4.getUniformLocation(program, "le"), lei);
 
-    Kav.innerHTML = ka_initial;
-    Ka.addEventListener('input', function () {
+
+    Kav.innerHTML = kai;
+    Ka.addEventListener('input', function(){
         Kav.innerHTML = this.value;
+
         var ka = parseFloat(Kav.innerHTML);
-        gl5.uniform1f(gl5.getUniformLocation(program, "Ka"), ka);
+        gl4.uniform1f(gl4.getUniformLocation(program, "Ka"), ka);
+
+        console.log(ka);
+        
     });
 
-    Kdv.innerHTML = kd_initial;
-    Kd.addEventListener('input', function () {
+    Kdv.innerHTML = kdi;
+    Kd.addEventListener('input', function(){
         Kdv.innerHTML = this.value;
         var kd = parseFloat(Kdv.innerHTML);
-        gl5.uniform1f(gl5.getUniformLocation(program, "Kd"), kd);
+        gl4.uniform1f(gl4.getUniformLocation(program, "Kd"), kd);
+        console.log(kd);
     });
 
-    Ksv.innerHTML = ks_initial;
-    Ks.addEventListener('input', function () {
+    Ksv.innerHTML = ksi;
+    Ks.addEventListener('input', function(){
         Ksv.innerHTML = this.value;
         var ks = parseFloat(Ksv.innerHTML);
-        gl5.uniform1f(gl5.getUniformLocation(program, "Ks"), ks);
+        gl4.uniform1f(gl4.getUniformLocation(program, "Ks"), ks);
+        console.log(ks);
     });
 
-    αv.innerHTML = alpha_initial;
-    α.addEventListener('input', function () {
-        αv.innerHTML = this.value;
-        var alpha = parseFloat(αv.innerHTML);
-        gl5.uniform1f(gl5.getUniformLocation(program, "alpha"), alpha);
+    sv.innerHTML = alphai;
+    s.addEventListener('input', function(){
+        sv.innerHTML = this.value;
+        var alpha = parseFloat(sv.innerHTML);
+        gl4.uniform1f(gl4.getUniformLocation(program, "alpha"), alpha);
+        console.log(alpha);
     });
 
-    Lev.innerHTML = le_initial;
-    Le.addEventListener('input', function () {
+    Lev.innerHTML = lei;
+    Le.addEventListener('input', function(){
         Lev.innerHTML = this.value;
         var le = parseFloat(Lev.innerHTML);
-        gl5.uniform1f(gl5.getUniformLocation(program, "le"), le);
+        gl4.uniform1f(gl4.getUniformLocation(program, "le"), le);
+        console.log(le);
     });
 
 }
