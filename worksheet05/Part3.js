@@ -1,4 +1,4 @@
-var obj_fn = 'final_pokeball.obj'
+var obj_fn = 'pig.obj'
 
 var g3_objDoc = null; // Info parsed from OBJ file
 var g3_drawingInfo = null; // Info for drawing the 3D model with WebGL
@@ -122,11 +122,6 @@ function init() {
     var aspect = canvas.width / canvas.height;
     var near = 0.1;
     var far = 50.0;
-
-
-    var projectMatrix = gl.getUniformLocation(program, 'projectMatrix');
-    var pj = perspective(fovy, aspect, near, far);
-    gl.uniformMatrix4fv(projectMatrix, gl.FALSE, flatten(pj));
 
     var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
     var pj = perspective(fovy, aspect, near, far);
