@@ -114,14 +114,22 @@ function init() {
         return model;
     }
 
-    let radius = 6;
-    let eye = vec3(radius*Math.sin(program.theta)*Math.cos(program.phi), radius*Math.sin(program.theta)*Math.sin(program.phi), radius*Math.cos(program.theta));
+    var eye = vec3(5, 0, 0);
+    var at = vec3(0.0, 0.0, 0.);
+    const up = vec3(0.0, 1.0, 0.0);
 
-    var projectMatrix = perspective(45.0, 1, 0.1, 10);
+    var fovy = 45.0; //angl3es in degrees
+    var aspect = canvas.width / canvas.height;
+    var near = 0.1;
+    var far = 50.0;
+
+    var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
+    var pj = perspective(fovy, aspect, near, far);
+    pj = mult(pj, translate(0.0, 0.0, 100.0)); // to move the camera away from the cube
     gl3.uniformMatrix4fv(projectMatrix, gl3.FALSE, flatten(pj));
 
-    var modelViewMatrixLoc = translate(0,0,0);
-    modelViewMatrix = mult(modelViewMatrix,lookAt(eye, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0)));
+    var modelViewMatrixLoc = gl3.getUniformLocation(program, "modelViewMatrix");
+    modelViewMatrix = lookAt(eye, at, up);
     gl3.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
     var theta = 0.0;
