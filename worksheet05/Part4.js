@@ -109,7 +109,7 @@ function init() {
         var model = initVertexBuffers(gl4, program);
 
         // Start reading the OBJ file
-        readOBJFile(obj_fn, gl4, model, 0.02, true);
+        readOBJFile(obj_fn, gl4, model, 2, true);
 
         return model;
     }
