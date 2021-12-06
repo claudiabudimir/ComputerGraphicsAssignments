@@ -114,7 +114,7 @@ function init() {
         return model;
     }
 
-    var eye = vec3(50, 0, 0);
+    var eye = vec3(5, 0, 0);
     var at = vec3(0.0, 0.0, 0.);
     const up = vec3(0.0, 1.0, 0.0);
 
@@ -124,8 +124,13 @@ function init() {
     var far = 50.0;
 
 
+    var projectMatrix = gl.getUniformLocation(program, 'projectMatrix');
+    var pj = perspective(fovy, aspect, near, far);
+    gl.uniformMatrix4fv(projectMatrix, gl.FALSE, flatten(pj));
+
     var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
     var pj = perspective(fovy, aspect, near, far);
+    pj = mult(pj, translate(0.0, 0.0, 30.0)); // to move the camera away from the cube
     gl3.uniformMatrix4fv(projectMatrix, gl3.FALSE, flatten(pj));
 
     var modelViewMatrixLoc = gl3.getUniformLocation(program, "modelViewMatrix");
