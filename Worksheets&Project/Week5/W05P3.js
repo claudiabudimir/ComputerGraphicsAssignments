@@ -1,4 +1,4 @@
-var obj_fn = 'final_pokeball.obj'
+var obj_fn = 'teapot.obj'
 
 var g3_objDoc = null; // Info parsed from OBJ file
 var g3_drawingInfo = null; // Info for drawing the 3D model with WebGL
