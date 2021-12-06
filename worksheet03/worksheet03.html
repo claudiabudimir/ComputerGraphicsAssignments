@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/initShaders.js"></script>
+    <script type="text/javascript" src="../common/MV.js"></script>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+
+<body>
+    <h1>Worksheet 3: Projections and transformations</h1>
+
+    <h2>Part 1.1: Unit cube in isometric view</h2>
+    <canvas id="gl-canvas1" width="512" height="512"></canvas>
+
+    <h2>Part 1.2: Wireframe unit cube in isometric view</h2>
+    <canvas id="gl-canvas2" width="512" height="512"></canvas>
+
+    <h2>Part 2.1: Projection matrix that sets the camera to be a
+        pinhole camera with a 45 degrees vertical field of view</h2>
+    <canvas id="gl-canvas3" width="512" height="512"></canvas>
+
+    <h2>Part 2.2: One cube is in one-point (front) perspective, one is in
+        two-point (X) perspective, and one is in three-point perspective</h2>
+    <canvas id="gl-canvas4" width="512" height="512"></canvas>
+    <br><br><br>
+    <!-- Shader's Scripts -->
+   <!--Part 1 -->
+
+    <script id="vertex-shader-1" type="x-shader/x-vertex">
+            attribute vec4 a_Position; 
+            attribute vec4 a_Color; 
+            varying vec4 v_Color; 
+
+            uniform mat4 modelViewMatrix;
+            void main() 
+            { 
+              gl_Position = modelViewMatrix * a_Position ;
+              v_Color = a_Color;
+            }
+        </script>
+    <script id="fragment-shader-1" type="x-shader/x-fragment">
+                precision mediump float; 
+                varying vec4 v_Color;
+                void main() 
+                { gl_FragColor = v_Color;}
+        </script>
+    <script type="text/javascript" src="Part1.1.js"></script>
+    <script type="text/javascript" src="Part1.2.js"></script>
+
+   <!--Part 2.1 -->
+
+    <script id="vertex-shader-2" type="x-shader/x-vertex">
+            attribute vec4 a_Position; 
+            attribute vec4 a_Color; 
+            varying vec4 v_Color;
+    
+            uniform mat4 projectMatrix;
+    
+            void main() {
+                gl_Position = projectMatrix * a_Position ;
+                v_Color = a_Color; 
+            }
+        </script>
+    <script id="fragment-shader-2" type="x-shader/x-fragment">
+            precision mediump float;
+            varying vec4 v_Color;
+            void main(){
+                gl_FragColor = v_Color;
+            }
+        </script>
+    <script type="text/javascript" src="Part2.1.js"></script>
+
+   <!--Part 2.2 -->
+    <script id="vertex-shader-3" type="x-shader/x-vertex">
+            attribute vec4 a_Position; 
+            attribute vec4 a_Color; 
+            varying vec4 v_Color;
+    
+            uniform mat4 projectMatrix;
+            uniform mat4 modelViewMatrix;
+    
+            void main() {
+                gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+                v_Color = a_Color; 
+            }
+        </script>
+    <script id="fragment-shader-3" type="x-shader/x-fragment">
+            precision mediump float;
+            varying vec4 v_Color;
+            void main(){
+                gl_FragColor = v_Color;
+            }
+        </script>
+    <script type="text/javascript" src="Part2.2.js"></script>
+</body>
+
+</html>

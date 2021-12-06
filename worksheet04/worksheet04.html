@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <script type="text/javascript" src="../common/webgl-utils.js"></script>
+        <script type="text/javascript" src="../common/initShaders.js"></script>
+        <script type="text/javascript" src="../common/MV.js"></script>
+        <link rel="stylesheet" href="../assets/style.css">
+    </head>
+
+    <body>
+        <h1>Worksheet 4: Lighting and (forward) shading</h1>
+
+        <h2>Part 1: Draw a sphere in perspective view</h2>
+        <canvas id="gl-canvas1" width="512" height="512"></canvas>
+        <br>
+        <div style="text-align: center">
+            <button id="incr_button1">Increment</button>
+            <button id="decr_button1">Decrement</button>
+        </div>
+
+        <h2>Part 2: Use depth buffer and back face culling to remove hidden
+            surfaces</h2>
+        <canvas id="gl-canvas2" width="512" height="512"></canvas>
+        <br>
+        <div style="text-align: center">
+            <button id="incr_button2">Increment</button>
+            <button id="decr_button2">Decrement</button>
+            <button id="windingOrderSwap_button">Swap Face Winding Order</button>
+        </div>
+
+        <h2>Part 3: Use Gouraud shading (with true normals) to draw a diffuse
+            sphere lit by a distant,
+            white, directional light with direction (0, 0, −1)</h2>
+        <canvas id="gl-canvas3" width="512" height="512"></canvas>
+        <br>
+        <div style="text-align: center">
+            <button id="incr_button3">Increment</button>
+            <button id="decr_button3">Decrement</button>
+            <button id="orbit_button">Enable/Diable Orbit view</button>
+        </div>
+
+        <h2>Part 4: Implement the full Phong reflection model in the vertex
+            shader and create sliders
+            for material parameters and light emission</h2>
+        <canvas id="gl-canvas4" width="512" height="512">
+            Web browser does not support HTML5’s canvas element.
+        </canvas> <br>
+        <div style="text-align: center">
+            <button id="incr_button4">Increment</button>
+            <button id="decr_button4">Decrement</button>
+            <button id="orbit_button2">Enable/Diable Orbit view</button>
+        </div>
+        <br>
+        <div class="container" style="text-align: center;">
+
+            0<input type="range" min="0" max="1" step="0.01" value="0.1"
+                id="Ka4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ka4">Ambient
+                reflectivity coefficient (Ka) = </label>
+            <span id="Kav4"></span><br><br>
+
+            0<input type="range" min="0" max="1" step="0.01" value="0.6"
+                id="Kd4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Kd4">Diffuse
+                reflectivity coefficient (Kd) = </label>
+            <span id="Kdv4"></span><br><br>
+
+            0<input type="range" min="0" max="1" step="0.01" value="1.0"
+                id="Ks4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ks4">Specular
+                reflectivity coefficient (Ks) = </label>
+            <span id="Ksv4"></span><br><br>
+
+            0<input type="range" min="0" max="100" value="100" id="α4">100
+            &nbsp;&nbsp;<label for="α4">Shininess(α) = </label> <span id="αv4"></span><br><br>
+            0<input type="range" min="0" max="2" step="0.01" value="1.35"
+                id="Le4">2 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Le4">Light
+                emmision(Le) = </label>
+            <span id="Lev4"></span><br><br>
+        </div>
+
+        <h2>Part 5: Use Phong shading by moving your implementation of the Phong
+            reflection
+            model to the fragment shader and varying positions and normals
+            across triangles
+            instead of colors</h2>
+        <canvas id="gl-canvas5" width="512" height="512"></canvas>
+        <br>
+        <div style="text-align: center">
+            <button id="incr_button5">Increment</button>
+            <button id="decr_button5">Decrement</button>
+            <button id="orbit_button3">Enable/Diable Orbit view</button>
+        </div>
+        <br>
+        <div class="container" style="text-align: center;">
+
+            0<input type="range" min="0" max="1" step="0.01" value="0.1"
+                id="Ka5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ka5">Ambient
+                reflectivity coefficient (Ka) = </label>
+            <span id="Kav5"></span><br><br>
+
+            0<input type="range" min="0" max="1" step="0.01" value="0.6"
+                id="Kd5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Kd5">Diffuse
+                reflectivity coefficient (Kd) = </label>
+            <span id="Kdv5"></span><br><br>
+
+            0<input type="range" min="0" max="1" step="0.01" value="1.0"
+                id="Ks5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ks5">Specular
+                reflectivity coefficient (Ks) = </label>
+            <span id="Ksv5"></span><br><br>
+
+            0<input type="range" min="0" max="100" value="100" id="α5">100
+            &nbsp;&nbsp;<label for="α5">Shininess(α) = </label> <span id="αv5"></span><br><br>
+            0<input type="range" min="0" max="2" step="0.01" value="1.35"
+                id="Le5">2 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Le5">Light
+                emmision(Le) = </label>
+            <span id="Lev5"></span><br><br>
+        </div>
+        <br><br><br>
+        <!-- Shader's Scripts -->
+        <!--Part 1 -->
+        <script id="vertex-shader-1" type="x-shader/x-vertex">
+        attribute vec4 a_Position; 
+        attribute vec4 a_Color; 
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+        }
+    </script>
+        <script id="fragment-shader-1" type="x-shader/x-fragment">
+        precision mediump float;
+        void main(){
+            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        }
+    </script>
+        <script type="text/javascript" src="Part1.js"></script>
+    </body>
+
+    <!--Part 2 -->
+    <script id="vertex-shader-2" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Color; 
+        varying vec4 v_Color; 
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+            v_Color = (0.5*a_Position) + 0.5; 
+        }
+    </script>
+    <script id="fragment-shader-2" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+    </script>
+    <script type="text/javascript" src="Part2.js"></script>
+
+    <!--Part 3 -->
+    <script id="vertex-shader-3" type="x-shader/x-vertex">
+            attribute vec4 a_Position;
+            attribute vec4 v_Normal; 
+            varying vec4 v_Color; 
+    
+            uniform vec4 diffuseProduct;
+            uniform vec4 lightPosition;
+    
+            uniform mat4 projectMatrix;
+            uniform mat4 modelViewMatrix;
+    
+            uniform vec4 lightEmission;
+    
+            void main() {
+                gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+                
+                vec3 pos = (modelViewMatrix * a_Position).xyz; //pos is vertex position in eye coordinates
+                vec3 L = lightPosition.w == 0.0 ? normalize(lightPosition.xyz):normalize(lightPosition.xyz - pos);
+                vec3 N = normalize(v_Normal.xyz);
+                
+                vec4 diffuse = max(dot(L, N), 0.0) * diffuseProduct;
+    
+                v_Color = diffuse* lightEmission;
+                v_Color.a = 1.0; 
+            }
+    </script>
+    <script id="fragment-shader-3" type="x-shader/x-fragment">
+            precision mediump float;
+            varying vec4 v_Color;
+            void main(){
+                gl_FragColor = v_Color;
+            }
+                </script>
+    <script type="text/javascript" src="Part3.js"></script>
+
+    <!--Part 4 -->
+
+    <script id="vertex-shader-4" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 v_Normal;
+        varying vec4 v_Color; 
+
+        uniform vec4 diffuseProduct;
+        uniform vec4 lightPosition;
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        uniform float Ka, Ks, Kd, alpha, le;
+
+        void main() {
+            
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+
+            vec3 pos = (modelViewMatrix * a_Position).xyz;
+            vec3 light = lightPosition.xyz;
+            vec3 L = normalize(light - pos);
+            vec3 E = normalize(-pos);
+            vec3 H = normalize(L + E);
+            vec3 N = normalize(v_Normal.xyz);
+
+            vec4 ambient = vec4((Ka * vec3(le)), 1.0);//ambient reflection
+            vec4 diffuse = vec4((Kd * max(dot(L, N), 0.0) *vec3(le)), 1.0) * diffuseProduct;//diffuse reflection, Angel 6.3.2
+            vec4 specular = vec4((Ks * pow(max(dot(N, H), 0.0), alpha) * vec3(le)), 1.0);//specular reflection, Angel 6.3.3
+
+            if( dot(L, N) < 0.0 ) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+
+            v_Color = ambient+ diffuse+ specular;   
+        }
+            </script>
+    <script id="fragment-shader-4" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+            </script>
+    <script type="text/javascript" src="Part4.js"></script>
+
+    <!--Part 5 -->
+    <script id="vertex-shader-5" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 v_Normal;
+        varying vec3 N, L, E;
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectMatrix;
+        uniform vec4 lightPosition;
+
+        void main(){
+            gl_Position = projectMatrix * modelViewMatrix * a_Position;
+
+            vec3 pos = (modelViewMatrix * a_Position).xyz;
+            vec3 light = lightPosition.xyz;
+            L = normalize(light - pos);
+            E = normalize(-pos);
+            N = normalize(v_Normal.xyz);
+        }
+    </script>
+    <script id="fragment-shader-5" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec4 diffuseProduct;
+        varying vec3 N, L, E;
+        
+        uniform float Ka, Ks, Kd, alpha, le;
+
+        void main(){
+
+            vec4 v_Color;
+
+            vec3 H = normalize(L + E);
+
+            float dif = max(dot(L, normalize(N)), 0.0);
+
+            float spec = pow(max(dot(normalize(N), H), 0.0), alpha);
+
+
+            vec4 ambient = vec4((Ka * vec3(le)), 1.0);
+            vec4 specular = vec4((Ks * spec * vec3(le)), 1.0);
+            vec4 diffuse = vec4((Kd * dif *vec3(le)), 1.0) * diffuseProduct;
+            
+            if( dot(L, N) < 0.0 ) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            } 
+
+            v_Color = ambient + specular + diffuse; 
+
+
+            gl_FragColor = v_Color;
+        }
+        </script>
+    <script type="text/javascript" src="Part5.js"></script>
+</html>
