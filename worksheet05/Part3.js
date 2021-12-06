@@ -1,4 +1,4 @@
-var obj_filename = 'monkey.obj'
+var obj_fn = 'monkey.obj'
 
 var g3_objDoc = null; // Info parsed from OBJ file
 var g3_drawingInfo = null; // Info for drawing the 3D model with WebGL
@@ -109,7 +109,7 @@ function init() {
         var model = initVertexBuffers(gl3, program);
 
         // Start reading the OBJ file
-        readOBJFile(obj_filename, gl3, model, 0.02, true);
+        readOBJFile(obj_fn, gl3, model, 0.02, true);
 
         return model;
     }

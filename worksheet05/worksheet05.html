@@ -1,55 +1,104 @@
-<!DOCTYPE html>
+<head>
+    <meta name="author" content="Carlos Ventura">
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/initShaders.js"></script>
+    <script type="text/javascript" src="../common/MV.js"></script>
+    <script type="text/javascript" src="../common/OBJParser.js"></script>
+    <meta charset="UTF-8">
+
+    <style>
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        ul {
+            text-align: left;
+            list-style-position: inside;
+            font-size: larger
+        }
+
+        body {
+            background-image: url('../BG.png');
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+
+            font-family: Arial;
+        }
+
+        button {
+            font-weight: bold;
+        }
+
+        canvas {
+            padding: 0;
+            margin: auto;
+            display: block;
+        }
+
+        hr.dashed {
+            border-top: 3px dashed white;
+        }
+
+        div{
+            width: 25%; margin: 0 auto;font-weight: bolder;font-size: large;
+        }
+    
+
+    </style>
+</head>
+
 <html>
 
-    <head>
-        <script type="text/javascript" src="../common/webgl-utils.js"></script>
-        <script type="text/javascript" src="../common/initShaders.js"></script>
-        <script type="text/javascript" src="../common/MV.js"></script>
-        <link rel="stylesheet" href="../assets/style.css">
-    </head>
+<body>
+    <h1>Week 6 Exercises</h1>
+    <h2>WORKSHEET 5: Rendering a triangle mesh </h2>
+    <hr class="dashed">
 
-    <body>
-        <h1>Worksheet 5: Rendering a triangle mesh</h1>
+    <h2>Part 3 - Load OBJ file</h2>
+    <canvas id="gl-canvas3" width="512" height="512">
+        Web browser does not support HTML5’s canvas element.
+    </canvas>
+    <hr class="dashed">
 
-        <h2>Part 3: Load an OBJ file</h2>
-        <canvas id="gl-canvas3" width="512" height="512"></canvas>
-        <br>
+    <h2>Part 4 - Shade Object</h2>
+    <canvas id="gl-canvas4" width="512" height="512">
+        Web browser does not support HTML5’s canvas element.
+    </canvas>
+    <br>
+    <div class="slidecontainer">
+        Ambient reflectivity coefficient (Ka) <br>
+        0<input type="range" min="0" max="1" step="0.01" value="0.50" id="Ka4">1
+        &nbsp;&nbsp;&nbsp;&nbsp;Value = <span id="Kav4"></span><br>
 
-        <h2>Part 4: Shade the object using Phong shading and the Phong illumination model</h2>
-        <canvas id="gl-canvas4" width="512" height="512"></canvas>
-        <br>
-        <div style="text-align: center">
-            <button id="incr_button5">Increment</button>
-            <button id="decr_button5">Decrement</button>
-            <button id="orbit_button3">Enable/Diable Orbit view</button>
-        </div>
-        <br>
-        <div class="container" style="text-align: center;">
+        Diffuse reflectivity coefficient (Kd)<br>
+        0<input type="range" min="0" max="1" step="0.01" value="0.1" id="Kd4">1
+        &nbsp;&nbsp;&nbsp;&nbsp;Value = <span id="Kdv4"></span><br>
 
-            0<input type="range" min="0" max="1" step="0.01" value="0.1"
-                id="Ka5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ka5">Ambient
-                reflectivity coefficient (Ka) = </label>
-            <span id="Kav5"></span><br><br>
+         Specular reflectivity coefficient (Ks)<br>
+        0<input type="range" min="0" max="1" step="0.01" value="1.0" id="Ks4">1
+        &nbsp;&nbsp;&nbsp;Value = <span id="Ksv4"></span><br>
 
-            0<input type="range" min="0" max="1" step="0.01" value="0.6"
-                id="Kd5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Kd5">Diffuse
-                reflectivity coefficient (Kd) = </label>
-            <span id="Kdv5"></span><br><br>
+        <span >Shininess(s)</span><br>
+        0<input type="range" min="0" max="100" value="18" id="s4">100 &nbsp;&nbsp;Value = <span id="sv4"></span><br>
 
-            0<input type="range" min="0" max="1" step="0.01" value="1.0"
-                id="Ks5">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ks5">Specular
-                reflectivity coefficient (Ks) = </label>
-            <span id="Ksv5"></span><br><br>
+        Emitted radiance(Le)<br>
+        0<input type="range" min="0" max="2" step="0.01" value="1.35" id="Le4">2
+        &nbsp;&nbsp;&nbsp;&nbsp;Value = <span id="Lev4"></span><br>
+    </div>
 
-            0<input type="range" min="0" max="100" value="100" id="α5">100
-            &nbsp;&nbsp;<label for="α5">Shininess(α) = </label> <span id="αv5"></span><br><br>
-            0<input type="range" min="0" max="2" step="0.01" value="1.35"
-                id="Le5">2 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Le5">Light
-                emmision(Le) = </label>
-            <span id="Lev5"></span><br><br>
-        </div>
-        <br><br><br>
-        <!-- Shader's Scripts -->
+    <ul>
+        <li><b>QUESTION:</b> Explain how you obtain and use surface normals, and explain how this relates to the surface
+            smoothness when you are rendering a triangle mesh.</li>
+        <li><b>ANSWER:</b> I obtain the normals using the OBJ file. Even though I don't pass the normals directly to the
+            fragment shader, I use them on the vertex shader on a variable passed to the fragment shader (N).
+            This relates to smoothness since this is how phong shading works, it computes for every pixel it's color
+            based on the interpolated surface normals.
+        </li>
+    </ul>
+
    <!--Part 3 -->
 
     <script id="vertex-shader-3" type="x-shader/x-vertex">
@@ -78,29 +127,36 @@
             </script>
     <script type="text/javascript" src="Part3.js"></script>
 
-    <!--Part 4 -->
+   <!--Part 4 -->
+
     <script id="vertex-shader-4" type="x-shader/x-vertex">
         attribute vec4 a_Position;
-        attribute vec4 v_Normal;
+        attribute vec4 a_Normal;
+        attribute vec4 a_Color;
         varying vec3 N, L, E;
         uniform mat4 modelViewMatrix;
         uniform mat4 projectMatrix;
         uniform vec4 lightPosition;
+        varying vec4 v2_Color;
 
         void main(){
-            gl_Position = projectMatrix * modelViewMatrix * a_Position;
 
             vec3 pos = (modelViewMatrix * a_Position).xyz;
             vec3 light = lightPosition.xyz;
             L = normalize(light - pos);
             E = normalize(-pos);
-            N = normalize(v_Normal.xyz);
+            N = normalize(vec4(a_Normal.xyz, 0).xyz);
+       
+            v2_Color = a_Color;
+            gl_Position = projectMatrix * modelViewMatrix * a_Position;
+
         }
-    </script>
+    
+            </script>
     <script id="fragment-shader-4" type="x-shader/x-fragment">
         precision mediump float;
-        uniform vec4 diffuseProduct;
         varying vec3 N, L, E;
+        varying vec4 v2_Color;
         
         uniform float Ka, Ks, Kd, alpha, le;
 
@@ -117,17 +173,20 @@
 
             vec4 ambient = vec4((Ka * vec3(le)), 1.0);
             vec4 specular = vec4((Ks * spec * vec3(le)), 1.0);
-            vec4 diffuse = vec4((Kd * dif *vec3(le)), 1.0) * diffuseProduct;
+            vec4 diffuse = vec4((Kd * dif *vec3(le)), 1.0);
             
             if( dot(L, N) < 0.0 ) {
                 specular = vec4(0.0, 0.0, 0.0, 1.0);
             } 
 
-            v_Color = ambient + specular + diffuse; 
+            v_Color = (ambient + specular + diffuse) * v2_Color; 
 
 
             gl_FragColor = v_Color;
         }
-        </script>
+     
+            </script>
     <script type="text/javascript" src="Part4.js"></script>
-    </html>
+
+</body>
+</html>
