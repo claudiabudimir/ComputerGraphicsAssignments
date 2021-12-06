@@ -1,23 +1,21 @@
+<!DOCTYPE html>
 <head>
     <script type="text/javascript" src="../common/webgl-utils.js"></script>
     <script type="text/javascript" src="../common/initShaders.js"></script>
     <script type="text/javascript" src="../common/MV.js"></script>
     <script type="text/javascript" src="../common/OBJParser.js"></script>
-    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../assets/style.css">
 </head>
 
 <html>
 
 <body>
-    <h1>Week 6 Exercises</h1>
-    <h2>WORKSHEET 5: Rendering a triangle mesh </h2>
-    <hr class="dashed">
 
-    <h2>Part 3 - Load OBJ file</h2>
-    <canvas id="gl-canvas3" width="512" height="512">
-        Web browser does not support HTML5’s canvas element.
-    </canvas>
-    <hr class="dashed">
+    <h1>Worksheet 5: Rendering a triangle mesh</h1>
+
+    <h2>Part 3: Load an OBJ file</h2>
+    <canvas id="gl-canvas3" width="512" height="512"></canvas>
+    <br>
 
     <h2>Part 4 - Shade Object</h2>
     <canvas id="gl-canvas4" width="512" height="512">
@@ -54,14 +52,12 @@
             based on the interpolated surface normals.
         </li>
     </ul>
-
+    
+<!-- Shader's Scripts -->
    <!--Part 3 -->
-
     <script id="vertex-shader-3" type="x-shader/x-vertex">
         attribute vec4 a_Position;
-        attribute vec4 a_Normal; 
         attribute vec4 a_Color;
-
         varying vec4 v_Color;
         
         uniform mat4 modelViewMatrix;
@@ -72,19 +68,17 @@
             v_Color = a_Color;
         }
      
-            </script>
+    </script>
     <script id="fragment-shader-3" type="x-shader/x-fragment">
         precision mediump float;
         varying vec4 v_Color;
         void main(){
             gl_FragColor = v_Color;
         }
-      
-            </script>
+    </script>
     <script type="text/javascript" src="Part3.js"></script>
 
    <!--Part 4 -->
-
     <script id="vertex-shader-4" type="x-shader/x-vertex">
         attribute vec4 a_Position;
         attribute vec4 a_Normal;
