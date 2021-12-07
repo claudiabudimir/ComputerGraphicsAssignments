@@ -191,52 +191,35 @@ function init() {
             rotateAroundOrbit = true;//start rotation around orbit
     });
 
-    var filterM2 = document.getElementById("filter-M2");
-    filterM2.onchange = function () {
-        var filter_value = filterM2.options[filterM2.selectedIndex].value;
+    var filter12 = document.getElementById("filterStyleMag2");
+    filter12.onchange = function () {
+        var filterStyleMag2 = filter12.options[filter12.selectedIndex].value;
 
-        if (filter_value == 0) {
-            //NEAREST
+        if (filterStyleMag2 == 0) {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            console.log("NEAREST");
-        } else if (filter_value == 1) {
-            //LINEAR
+        } else if (filterStyleMag2 == 1) {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            console.log("LINEAR");
         }
     }
 
-    var filterm2 = document.getElementById("filter-m2");
-    filterm2.onchange = function () {
-        var filter_value = filterm2.options[filterm2.selectedIndex].value;
+    var filter22 = document.getElementById("filterStyleMin2");
+    filter22.onchange = function () {
+        var filterStyleMin2 = filter22.options[filter22.selectedIndex].value;
 
-        if (filter_value == 0) {
-            //NEAREST
+        if (filterStyleMin2 == 0) {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);;
-            console.log("NEAREST");
-        } else if (filter_value == 1) {
-            //LINEAR
+        } else if (filterStyleMin2 == 1) {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            console.log("LINEAR");
-        } else if (filter_value == 2) {
-            //MIPMAP
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST); 
-            console.log("MIPMAP1");
-        } else if (filter_value == 3) {
-            //MIPMAP
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST); 
-            console.log("MIPMAP2");
-        } else if (filter_value == 4) {
-            //MIPMAP
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR); 
-            console.log("MIPMAP3");
-        }else if (filter_value == 5) {
-            //MIPMAP
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); 
-            console.log("MIPMAP4");
+        } else if (filterStyleMin2 == 2) {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
+        } else if (filterStyleMin2 == 3) {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+        } else if (filterStyleMin2 == 4) {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
+        }else if (filterStyleMin2 == 5) {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
         }
     }
-
 }
 
 init();

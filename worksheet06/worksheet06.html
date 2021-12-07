@@ -57,21 +57,20 @@
         <button id="orbit_button">Animation</button>
         <br><br>
 
-        TEXTURE FILTERING MODE - Magnification <br>
-        <select id="filter-M2" style="font-size: 20;">
-            <option sty value="0" selected="selected">Nearest</option>
-            <option value="1">Linear</option>
+        Select texture filtering mode for magnification:<br>
+        <select id="filterStyleMag2">
+            <option sty value="0" selected="selected">NEAREST</option>
+            <option value="1">LINEAR</option>
         </select>
         <br>
-
-        TEXTURE FILTERING MODE - Minification <br>
-        <select id="filter-m2" style="font-size: 20;">
-            <option sty value="0" selected="selected">Nearest</option>
-            <option value="1">Linear</option>
-            <option value="2">MipMap(NN)</option>
-            <option value="3">MipMap(LN)</option>
-            <option value="4">MipMap(NL)</option>
-            <option value="5">MipMap(LL)</option>
+        Select texture filtering mode for minification: <br>
+        <select id="filterStyleMin2">
+            <option sty value="0" selected="selected">NEAREST</option>
+            <option value="1">LINEAR</option>
+            <option value="2">NEAREST_MIPMAP_NEAREST</option>
+            <option value="3">LINEAR_MIPMAP_NEAREST</option>
+            <option value="4">NEAREST_MIPMAP_LINEAR</option>
+            <option value="5">LINEAR_MIPMAP_LINEAR</option>
         </select>
     </div>
     <!-- Shader's Scripts -->
