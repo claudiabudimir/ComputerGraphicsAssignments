@@ -108,16 +108,14 @@ function init() {
     function render() {
         gl2.clear(gl2.COLOR_BUFFER_BIT | gl2.DEPTH_BUFFER_BIT);
         gl2.drawArrays(gl2.TRIANGLE_FAN, 0, 4);
-        //gl2.drawElements(gl2.TRIANGLES, indice, gl2.UNSIGNED_SHORT, 0);
         window.requestAnimFrame(render);
     }
-
     render();
     
     //selection input fields
-    var wrap = document.getElementById("wrapStyle");
-    wrap.onchange = function () {
-        var wrapStyle = wrap.options[wrap.selectedIndex].value;
+    var wrapping = document.getElementById("wrapStyle");
+    wrapping.onchange = function () {
+        var wrapStyle = wrapping.options[wrapping.selectedIndex].value;
         if (wrapStyle == 0) {
             gl2.texParameteri(gl2.TEXTURE_2D, gl2.TEXTURE_WRAP_S, gl2.REPEAT);
             gl2.texParameteri(gl2.TEXTURE_2D, gl2.TEXTURE_WRAP_T, gl2.REPEAT);
@@ -127,9 +125,9 @@ function init() {
         }
     }
 
-    var filterM = document.getElementById("filterStyleMag");
-    filterM.onchange = function () {
-        var filterStyleMag = filterM.options[filterM.selectedIndex].value;
+    var filter1 = document.getElementById("filterStyleMag");
+    filter1.onchange = function () {
+        var filterStyleMag = filter1.options[filter1.selectedIndex].value;
 
         if (filterStyleMag == 0) {
             gl2.texParameteri(gl2.TEXTURE_2D, gl2.TEXTURE_MAG_FILTER, gl2.NEAREST);
@@ -138,10 +136,10 @@ function init() {
         }
     }
 
-    var filterm = document.getElementById("filterStyleMin");
-    filterm.onchange = function () {
-        var filterStyleMin = filterm.options[filterm.selectedIndex].value;
-        
+    var filter2 = document.getElementById("filterStyleMin");
+    filter2.onchange = function () {
+        var filterStyleMin = filter2.options[filter2.selectedIndex].value;
+
         if (filterStyleMin == 0) {
             gl2.texParameteri(gl2.TEXTURE_2D, gl2.TEXTURE_MIN_FILTER, gl2.NEAREST);;
         } else if (filterStyleMin == 1) {
