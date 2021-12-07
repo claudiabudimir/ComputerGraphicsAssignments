@@ -119,6 +119,27 @@ function init() {
     gl4.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
     var theta = 0.0;
+
+    var image = document.createElement('img');
+    image.crossorigin = 'anonymous';
+    image.onload = function () {
+        // texture initialization 
+        var texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.uniform1i(gl.getUniformLocation(program, "texMap"), 0);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+        gl.generateMipmap(gl.TEXTURE_2D);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    };
+    image.src = 'tt.jpg';
+    
     function render() {
         window.requestAnimFrame(render);
 

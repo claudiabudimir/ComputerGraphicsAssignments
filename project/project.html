@@ -42,32 +42,8 @@
             <span id="Lev4"></span><br><br>
         </div>
 
-        <!-- Shader's Scripts -->
-        <!--Part 3 -->
-        <script id="vertex-shader-3" type="x-shader/x-vertex">
-        attribute vec4 a_Position;
-        attribute vec4 a_Color;
-        varying vec4 v_Color;
-        
-        uniform mat4 modelViewMatrix;
-        uniform mat4 projectMatrix;
+        <!-- Shader's Script -->
 
-        void main() {
-            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
-            v_Color = a_Color;
-        }
-     
-    </script>
-        <script id="fragment-shader-3" type="x-shader/x-fragment">
-        precision mediump float;
-        varying vec4 v_Color;
-        void main(){
-            gl_FragColor = v_Color;
-        }
-    </script>
-        <script type="text/javascript" src="Part3.js"></script>
-
-        <!--Part 4 -->
         <script id="vertex-shader-4" type="x-shader/x-vertex">
         attribute vec4 a_Position;
         attribute vec4 a_Normal;
@@ -98,6 +74,7 @@
         varying vec4 v_Color2;
         
         uniform float Ka, Ks, Kd, alpha, le;
+        uniform sampler2D texMap;
 
         void main(){
 
@@ -120,8 +97,13 @@
 
             v_Color = (ambient + specular + diffuse) * v_Color2; 
 
+            float pi = 3.14;
+            float u = 1.0 - atan(N.z, N.x)/(2.0*pi);
+            float v = acos(N.y)/pi;
+            
+            vec2 texCoord = vec2(u,v);
 
-            gl_FragColor = v_Color;
+            gl_FragColor = v_Color * texture2D(texMap, texCoord);
         }
      
             </script>
