@@ -22,6 +22,30 @@
             wrapping and filtering modes</h2>
         <canvas id="gl-canvas2" width="512" height="512"></canvas>
         <br>
+        <div class="container" style="text-align: center;">
+            Select texture wrapping mode:<br>
+            <select id="wrapStyle">
+                <option value="0" selected="selected">REPEAT</option>
+                <option value="1">CLAMP-TO-EDGE</option>
+            </select>
+            <br>
+            Select texture filtering mode for magnification:<br>
+            <select id="filterStyleMag">
+                <option sty value="0" selected="selected">NEAREST</option>
+                <option value="1">LINEAR</option>
+            </select>
+            <br>
+            Select texture filtering mode for minification: <br>
+            <select id="filterStyleMin">
+                <option sty value="0" selected="selected">NEAREST</option>
+                <option value="1">LINEAR</option>
+                <option value="2">NEAREST_MIPMAP_NEAREST</option>
+                <option value="3">LINEAR_MIPMAP_NEAREST</option>
+                <option value="4">NEAREST_MIPMAP_LINEAR</option>
+                <option value="5">LINEAR_MIPMAP_LINEAR</option>
+            </select>
+        </div>
+        <br>
 
         <h2>Part 3: Map an earth texture onto the sphere</h2>
         <canvas id="gl-canvas3" width="512" height="512"></canvas>
@@ -38,7 +62,6 @@
             uniform mat4 modelViewMatrix;
 
             void main() {
-            
                 fTexCoord = a_TexCoord;
                 gl_Position =  projectMatrix * modelViewMatrix * a_Position;
             }
@@ -52,9 +75,39 @@
             void main(){
                 gl_FragColor = texture2D(texMap, fTexCoord);
             }
-
         </script>
         <script type="text/javascript" src="Part1.js"></script>
 
+        <!--Part 2 -->
+        <script id="vertex-shader-2" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Color;
+        attribute vec2 a_TexCoord;
+        
+        varying vec4 v_Color; 
+        varying vec2 v_TexCoord;
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+            v_Color = a_Color;
+            v_TexCoord = a_TexCoord;
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position;
+        }
+        </script>
+        <script id="fragment-shader-2" type="x-shader/x-fragment">
+            precision mediump float;
+
+            varying vec4 v_Color;
+            varying vec2 v_TexCoord;
+            
+            uniform sampler2D texMap;
+            
+            void main(){
+                gl_FragColor = v_Color * texture2D(texMap, v_TexCoord);
+            }
+        </script>
+        <script type="text/javascript" src="Part2.js"></script>
     </body>
 </html>
