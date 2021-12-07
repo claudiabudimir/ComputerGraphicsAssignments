@@ -17,7 +17,7 @@ function init() {
     //Enable a depth test
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);//Enable back face culling, The initial value of glCullFace is GL_BACK.
-    gl.frontFace(gl.BACK); // Passing GL_CCW to mode selects counterclockwise polygons as front-facing 
+    gl.frontFace(gl.CCW); // Passing GL_CCW to mode selects counterclockwise polygons as front-facing 
 
     //Approximation of a sphere by recursive subdivision algorithm
     var va = vec4(0.0, 0.0, 1.0, 1);
@@ -94,7 +94,7 @@ function init() {
     createSphere();//first call
 
     //uniform variables transmission
-    var materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);//yellow diffuse
+    var materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);//white
     var lightPosition = vec4(0.0, 0.0, 1.0, 0.0); //fourth component is zero so it becomes a directional light, l=-le
     var lightEmission = vec4(1.0, 1.0, 1.0, 1.0); //Le
     var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);//Ld = Le
@@ -105,10 +105,10 @@ function init() {
     gl.uniform4fv(gl.getUniformLocation(program, "lightEmission"), flatten(lightEmission));
 
     //projectMatrix & modelViewMatrixLoc
-    var fovy = 45.0;
+    var fovy = 20.0;
     var aspect = canvas.width / canvas.height;
     var near = 0.5;
-    var far = 15.0;
+    var far = 100.0;
     const up = vec3(0.0, 1.0, 0.0);
     var at = vec3(0.0, 0.0, 0.0);
     var eye = vec3(0.0, 0.0, 4.9);//is in one-point (front) perspective
