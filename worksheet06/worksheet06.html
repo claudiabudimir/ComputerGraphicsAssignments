@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head>
     <script type="text/javascript" src="../common/webgl-utils.js"></script>
     <script type="text/javascript" src="../common/initShaders.js"></script>
@@ -9,51 +10,73 @@
 
 <html>
 
-    <body>
+<body>
 
-        <h1>Worksheet 6: Texture mapping</h1>
+    <h1>Worksheet 6: Texture mapping</h1>
 
-        <h2>Part 1: Create a texture object and bind it as the current 2D
-            texture object</h2>
-        <canvas id="gl-canvas1" width="512" height="512"></canvas>
+    <h2>Part 1: Create a texture object and bind it as the current 2D
+        texture object</h2>
+    <canvas id="gl-canvas1" width="512" height="512"></canvas>
+    <br>
+
+    <h2>Part 2: Create selection menus to switch between different texture
+        wrapping and filtering modes</h2>
+    <canvas id="gl-canvas2" width="512" height="512"></canvas>
+    <br>
+    <div class="container" style="text-align: center;">
+        Select texture wrapping mode:<br>
+        <select id="wrapStyle">
+            <option value="0" selected="selected">REPEAT</option>
+            <option value="1">CLAMP-TO-EDGE</option>
+        </select>
+        <br>
+        Select texture filtering mode for magnification:<br>
+        <select id="filterStyleMag">
+            <option sty value="0" selected="selected">NEAREST</option>
+            <option value="1">LINEAR</option>
+        </select>
+        <br>
+        Select texture filtering mode for minification: <br>
+        <select id="filterStyleMin">
+            <option sty value="0" selected="selected">NEAREST</option>
+            <option value="1">LINEAR</option>
+            <option value="2">NEAREST_MIPMAP_NEAREST</option>
+            <option value="3">LINEAR_MIPMAP_NEAREST</option>
+            <option value="4">NEAREST_MIPMAP_LINEAR</option>
+            <option value="5">LINEAR_MIPMAP_LINEAR</option>
+        </select>
+    </div>
+    <br>
+
+    <h2>Part 3: Map an earth texture onto the sphere</h2>
+    <canvas id="gl-canvas3" width="512" height="512"></canvas>
+    <br>
+    <div>
+        <button id="increment3">Increment</button>
+        <button id="decrement3">Decrement</button>
+        <button id="animation3">Animation</button>
+        <br><br>
+
+        TEXTURE FILTERING MODE - Magnification <br>
+        <select id="filter-M2" style="font-size: 20;">
+            <option sty value="0" selected="selected">Nearest</option>
+            <option value="1">Linear</option>
+        </select>
         <br>
 
-        <h2>Part 2: Create selection menus to switch between different texture
-            wrapping and filtering modes</h2>
-        <canvas id="gl-canvas2" width="512" height="512"></canvas>
-        <br>
-        <div class="container" style="text-align: center;">
-            Select texture wrapping mode:<br>
-            <select id="wrapStyle">
-                <option value="0" selected="selected">REPEAT</option>
-                <option value="1">CLAMP-TO-EDGE</option>
-            </select>
-            <br>
-            Select texture filtering mode for magnification:<br>
-            <select id="filterStyleMag">
-                <option sty value="0" selected="selected">NEAREST</option>
-                <option value="1">LINEAR</option>
-            </select>
-            <br>
-            Select texture filtering mode for minification: <br>
-            <select id="filterStyleMin">
-                <option sty value="0" selected="selected">NEAREST</option>
-                <option value="1">LINEAR</option>
-                <option value="2">NEAREST_MIPMAP_NEAREST</option>
-                <option value="3">LINEAR_MIPMAP_NEAREST</option>
-                <option value="4">NEAREST_MIPMAP_LINEAR</option>
-                <option value="5">LINEAR_MIPMAP_LINEAR</option>
-            </select>
-        </div>
-        <br>
-
-        <h2>Part 3: Map an earth texture onto the sphere</h2>
-        <canvas id="gl-canvas3" width="512" height="512"></canvas>
-        <br>
-
-        <!-- Shader's Scripts -->
-        <!--Part 1 -->
-        <script id="vertex-shader-1" type="x-shader/x-vertex">
+        TEXTURE FILTERING MODE - Minification <br>
+        <select id="filter-m2" style="font-size: 20;">
+            <option sty value="0" selected="selected">Nearest</option>
+            <option value="1">Linear</option>
+            <option value="2">MipMap(NN)</option>
+            <option value="3">MipMap(LN)</option>
+            <option value="4">MipMap(NL)</option>
+            <option value="5">MipMap(LL)</option>
+        </select>
+    </div>
+    <!-- Shader's Scripts -->
+    <!--Part 1 -->
+    <script id="vertex-shader-1" type="x-shader/x-vertex">
             attribute vec4 a_Position;
             attribute vec2 a_TexCoord;
             varying vec2 fTexCoord;
@@ -66,7 +89,7 @@
                 gl_Position =  projectMatrix * modelViewMatrix * a_Position;
             }
         </script>
-        <script id="fragment-shader-1" type="x-shader/x-fragment">
+    <script id="fragment-shader-1" type="x-shader/x-fragment">
             precision mediump float;
 
             varying vec2 fTexCoord;
@@ -76,10 +99,10 @@
                 gl_FragColor = texture2D(texMap, fTexCoord);
             }
         </script>
-        <script type="text/javascript" src="Part1.js"></script>
+    <script type="text/javascript" src="Part1.js"></script>
 
-        <!--Part 2 -->
-        <script id="vertex-shader-2" type="x-shader/x-vertex">
+    <!--Part 2 -->
+    <script id="vertex-shader-2" type="x-shader/x-vertex">
         attribute vec4 a_Position;
         attribute vec4 a_Color;
         attribute vec2 a_TexCoord;
@@ -96,7 +119,7 @@
             gl_Position =  projectMatrix * modelViewMatrix * a_Position;
         }
         </script>
-        <script id="fragment-shader-2" type="x-shader/x-fragment">
+    <script id="fragment-shader-2" type="x-shader/x-fragment">
             precision mediump float;
 
             varying vec4 v_Color;
@@ -108,6 +131,74 @@
                 gl_FragColor = v_Color * texture2D(texMap, v_TexCoord);
             }
         </script>
-        <script type="text/javascript" src="Part2.js"></script>
-    </body>
+    <script type="text/javascript" src="Part2.js"></script>
+    <!--Part 3 -->
+
+    <script id="vertex-shader-3" type="x-shader/x-vertex">
+    attribute vec4 a_Position;
+    attribute vec4 a_Normal; 
+
+    varying vec4 v_Normal;
+    varying vec4 v_Color; 
+
+    uniform vec4 diffuseProduct;
+    uniform vec4 lightPosition;
+
+    uniform mat4 projectMatrix;
+    uniform mat4 modelViewMatrix;
+
+    uniform vec4 lightEmission;
+
+    void main() {
+
+        v_Normal = a_Normal;
+
+        vec3 pos = (modelViewMatrix * a_Position).xyz;
+        
+        vec3 L;
+
+        vec3 N = normalize(modelViewMatrix * a_Normal).xyz;
+
+        if (lightPosition.w == 0.0)
+            L = normalize(lightPosition.xyz);
+        else
+            L = normalize(lightPosition.xyz - pos);
+
+        
+        float Kd = max(dot(L, N), 0.0);
+        vec4 diffuse = Kd * diffuseProduct;
+
+
+        gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+        v_Color = diffuse* lightEmission;
+        v_Color.a = 1.0; 
+    }
+
+        </script>
+    <script id="fragment-shader-3" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec4 v_Color;
+    varying vec4 v_Normal;
+
+    uniform sampler2D texMap;
+
+    void main(){
+
+        vec4 N = normalize(v_Normal);
+
+        float pi = 3.14159265358979323846;
+        float u = 1.0 - atan(N.z, N.x)/(2.0*pi);
+        float v = acos(N.y)/pi;
+        
+        vec2 texCoord = vec2(u,v);
+
+        gl_FragColor = v_Color * texture2D(texMap, texCoord);
+
+    }
+
+        </script>
+    <script type="text/javascript" src="Part3.js"></script>
+</body>
+
 </html>
