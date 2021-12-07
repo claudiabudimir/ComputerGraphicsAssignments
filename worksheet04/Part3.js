@@ -126,54 +126,6 @@ function init() {
     var rotateAroundOrbit = true;
     var theta = 0;
 
-    function render(){
-    if(rotateAroundOrbit)
-        theta+=0.01;
 
-    eye = vec3(5.0*Math.sin(theta), 0.0, 5.0*Math.cos(theta));
-    var modelViewMatrix = lookAt(eye, at, up);
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    for(var cnt=0; cnt<index; cnt+=3)
-        gl.drawArrays(gl.TRIANGLES, cnt, 3);
-    window.requestAnimFrame(render);
-    }
-    render();//initial render call
-    
-   
-    var increment = document.getElementById("incr_button3");
-    var decrement = document.getElementById("decr_button3");
-    var orbit = document.getElementById("orbit_button");
-
-    increment.addEventListener("click", function () {
-        if(numTimesToSubdivide < 5){
-            index = 0;//reset index
-            pointsArray = [];//reset points array 
-            normalsArray = [];//reset normals vector
-            numTimesToSubdivide ++;
-
-            createSphere()//sphere recreation
-            //render();//sphere redraw
-        }
-    });
-
-    decrement.addEventListener("click", function () {
-        if(numTimesToSubdivide > 0){
-            index = 0;//reset index
-            pointsArray = [];//reset points array 
-            normalsArray = [];//reset normals vector
-            numTimesToSubdivide --;
-            createSphere()//sphere recreation
-            //render();//sphere redraw
-        }
-    });
-
-    orbit.addEventListener("click", function () {
-        if(rotateAroundOrbit)
-            rotateAroundOrbit = false;//stop rotation around orbit
-        else
-            rotateAroundOrbit = true;//start rotation around orbit
-    });
 }
 init();
