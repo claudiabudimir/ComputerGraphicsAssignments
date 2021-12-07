@@ -160,7 +160,7 @@ function init() {
     var Lev = document.getElementById("Lev4");
 
     var ka_initial = 0.3;
-    var kd_initial = 0.6;
+    var kd_initial = 0.5;
     var ks_initial = 0.9;
     var alpha_initial = 96;
     var le_initial = 1.2;
