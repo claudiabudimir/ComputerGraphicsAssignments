@@ -59,7 +59,7 @@ function init() {
     }
 
     //Create sphere by using the division algorithm
-    var numTimesToSubdivide = 0; //initial values
+    var numTimesToSubdivide = 5; //initial values
     var index = 0;
     var pointsArray = [];
     var normalsArray = [];
