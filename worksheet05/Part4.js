@@ -74,14 +74,9 @@ function init() {
     canvas = document.getElementById("gl-canvas4");
     gl4 = WebGLUtils.setupWebGL(canvas);
 
-    if (!gl4) {
-        alert("WebGL isn�t available");
-    }
-
     gl4.viewport(0, 0, canvas.width, canvas.height);
     gl4.clearColor(0.3921, 0.5843, 0.9294, 1.0);
     gl4.clear(gl4.COLOR_BUFFER_BIT);
-
 
     // Load shaders and initialize attribute buffers
     var program = initShaders(gl4, "vertex-shader-4", "fragment-shader-4");
