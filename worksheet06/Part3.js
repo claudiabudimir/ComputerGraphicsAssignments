@@ -17,7 +17,7 @@ function init() {
     //Enable a depth test
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);//Enable back face culling, The initial value of glCullFace is GL_BACK.
-    gl.frontFace(gl.CCW); // Passing GL_CCW to mode selects counterclockwise polygons as front-facing 
+    gl.frontFace(gl.BACK); // Passing GL_CCW to mode selects counterclockwise polygons as front-facing 
 
     //Approximation of a sphere by recursive subdivision algorithm
     var va = vec4(0.0, 0.0, 1.0, 1);
