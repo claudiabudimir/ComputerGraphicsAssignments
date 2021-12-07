@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<head>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/initShaders.js"></script>
+    <script type="text/javascript" src="../common/MV.js"></script>
+    <script type="text/javascript" src="../common/OBJParser.js"></script>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+
+<html>
+
+    <body>
+
+        <h1>Load uv-coordinates and texture(s) together with an OBJ model and render a
+            textured model (W06P4)</h1>
+
+        <canvas id="gl-canvas4" width="512" height="512"></canvas>
+
+        <br>
+        <div class="container" style="text-align: center;">
+            0<input type="range" min="0" max="1" step="0.01" value="0.1"
+                id="Ka4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ka4">Ambient
+                reflectivity coefficient (Ka) = </label>
+            <span id="Kav4"></span><br><br>
+
+            0<input type="range" min="0" max="1" step="0.01" value="0.6"
+                id="Kd4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Kd4">Diffuse
+                reflectivity coefficient (Kd) = </label>
+            <span id="Kdv4"></span><br><br>
+
+            0<input type="range" min="0" max="1" step="0.01" value="1.0"
+                id="Ks4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ks4">Specular
+                reflectivity coefficient (Ks) = </label>
+            <span id="Ksv4"></span><br><br>
+
+            0<input type="range" min="0" max="100" value="100" id="s4">100
+            &nbsp;&nbsp;<label for="s4">Shininess(α) = </label> <span id="sv4"></span><br><br>
+
+            0<input type="range" min="0" max="2" step="0.01" value="1.35"
+                id="Le4">2 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Le4">Light
+                emmision(Le) = </label>
+            <span id="Lev4"></span><br><br>
+        </div>
+
+        <!-- Shader's Scripts -->
+        <!--Part 3 -->
+        <script id="vertex-shader-3" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Color;
+        varying vec4 v_Color;
+        
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectMatrix;
+
+        void main() {
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+            v_Color = a_Color;
+        }
+     
+    </script>
+        <script id="fragment-shader-3" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 v_Color;
+        void main(){
+            gl_FragColor = v_Color;
+        }
+    </script>
+        <script type="text/javascript" src="Part3.js"></script>
+
+        <!--Part 4 -->
+        <script id="vertex-shader-4" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec4 a_Normal;
+        attribute vec4 a_Color;
+        varying vec3 N, L, E;
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectMatrix;
+        uniform vec4 lightPosition;
+        varying vec4 v_Color2;
+
+        void main(){
+
+            vec3 pos = (modelViewMatrix * a_Position).xyz;
+            vec3 light = lightPosition.xyz;
+            L = normalize(light - pos);
+            E = normalize(-pos);
+            N = normalize(a_Normal.xyz);
+       
+            v_Color2 = a_Color;
+            gl_Position = projectMatrix * modelViewMatrix * a_Position;
+
+        }
+    
+            </script>
+        <script id="fragment-shader-4" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec3 N, L, E;
+        varying vec4 v_Color2;
+        
+        uniform float Ka, Ks, Kd, alpha, le;
+
+        void main(){
+
+            vec4 v_Color;
+
+            vec3 H = normalize(L + E);
+
+            float dif = max(dot(L, normalize(N)), 0.0);
+
+            float spec = pow(max(dot(normalize(N), H), 0.0), alpha);
+
+
+            vec4 ambient = vec4((Ka * vec3(le)), 1.0);
+            vec4 specular = vec4((Ks * spec * vec3(le)), 1.0);
+            vec4 diffuse = vec4((Kd * dif *vec3(le)), 1.0);
+            
+            if( dot(L, N) < 0.0 ) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            } 
+
+            v_Color = (ambient + specular + diffuse) * v_Color2; 
+
+
+            gl_FragColor = v_Color;
+        }
+     
+            </script>
+        <script type="text/javascript" src="Part4.js"></script>
+
+    </body>
+</html>
