@@ -176,12 +176,11 @@
 
         vec4 N = normalize(v_Normal);
 
-        float pi = 3.14159265358979323846;
+        float pi = 3.14;
         float u = 1.0 - atan(N.z, N.x)/(2.0*pi);
         float v = acos(N.y)/pi;
         
         vec2 texCoord = vec2(u,v);
-
         gl_FragColor = v_Color * texture2D(texMap, texCoord);
     }
         </script>
