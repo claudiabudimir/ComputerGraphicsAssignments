@@ -18,6 +18,7 @@ var OBJDoc = function (fileName) {
   this.objects = new Array(0);   // Initialize the property for Object
   this.vertices = new Array(0);  // Initialize the property for Vertex
   this.normals = new Array(0);   // Initialize the property for Normal
+  this.textures = new Array(0);   // Initialize the property for Textures
 }
 
 // Parsing the OBJ file
@@ -78,6 +79,10 @@ OBJDoc.prototype.parse = function (fileString, scale, reverse) {
         var normal = this.parseNormal(sp);
         this.normals.push(normal);
         continue; // Go to the next line
+      case 'vt':   // Read texture
+        var tex = this.parseTexture(sp);
+        this.textures.push(tex);
+        continue; // Go to the next line
       case 'usemtl': // Read Material name
         currentMaterialName = this.parseUsemtl(sp);
         continue; // Go to the next line
@@ -117,6 +122,12 @@ OBJDoc.prototype.parseNormal = function (sp) {
   var y = sp.getFloat();
   var z = sp.getFloat();
   return (new Normal(x, y, z));
+}
+
+OBJDoc.prototype.parseTexture = function (sp) {
+  var x = sp.getFloat();
+  var y = sp.getFloat();
+  return (new Texture(x, y));
 }
 
 OBJDoc.prototype.parseUsemtl = function (sp) {
@@ -265,6 +276,7 @@ OBJDoc.prototype.getDrawingInfo = function () {
   var numVertices = this.vertices.length;
   var vertices = new Float32Array(numVertices * 3);
   var normals = new Float32Array(numVertices * 3);
+  var textures = new Float32Array(numVertices * 2);
   var colors = new Float32Array(numVertices * 4);
   var indices = new Uint16Array(numIndices);
 
@@ -290,6 +302,10 @@ OBJDoc.prototype.getDrawingInfo = function () {
         colors[vIdx * 4 + 1] = color.g;
         colors[vIdx * 4 + 2] = color.b;
         colors[vIdx * 4 + 3] = color.a;
+        //Copy textures
+        var texture = this.textures[vIdx];
+        textures[vIdx * 2 + 0] = texture.x;
+        textures[vIdx * 2 + 1] = texture.y;
         // Copy normal
         var nIdx = face.nIndices[k];
         if (nIdx >= 0) {
@@ -307,7 +323,7 @@ OBJDoc.prototype.getDrawingInfo = function () {
     }
   }
 
-  return new DrawingInfo(vertices, normals, colors, indices);
+  return new DrawingInfo(vertices, normals, colors, indices, textures);
 }
 
 //------------------------------------------------------------------------------
@@ -356,6 +372,14 @@ var Normal = function (x, y, z) {
 }
 
 //------------------------------------------------------------------------------
+// Texture Object
+//------------------------------------------------------------------------------
+var Texture = function (x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+//------------------------------------------------------------------------------
 // Color Object
 //------------------------------------------------------------------------------
 var Color = function (r, g, b, a) {
@@ -392,9 +416,10 @@ var Face = function (materialName) {
 //------------------------------------------------------------------------------
 // DrawInfo Object
 //------------------------------------------------------------------------------
-var DrawingInfo = function (vertices, normals, colors, indices) {
+var DrawingInfo = function (vertices, normals, colors, indices, textures) {
   this.vertices = vertices;
   this.normals = normals;
+  this.textures = textures;
   this.colors = colors;
   this.indices = indices;
 }
