@@ -9,7 +9,7 @@ function initVertexBuffers(gl, program) {
     var o = new Object();
 
     o.vertexBuffer = createEmptyArrayBuffer(gl, program.a_Position, 3, gl.FLOAT);
-    //o.normalBuffer = createEmptyArrayBuffer(gl, program.a_Normal, 3, gl.FLOAT);
+    o.normalBuffer = createEmptyArrayBuffer(gl, program.a_Normal, 3, gl.FLOAT);
     o.colorBuffer = createEmptyArrayBuffer(gl, program.a_Color, 4, gl.FLOAT);
     o.textureBuffer = createEmptyArrayBuffer(gl, program.a_TexCoord, 2, gl.FLOAT);
     o.indexBuffer = gl.createBuffer();
@@ -34,8 +34,8 @@ function onReadComplete(gl, model, objDoc) {
     gl.bindBuffer(gl.ARRAY_BUFFER, model.vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, drawingInfo.vertices, gl.STATIC_DRAW);
 
-    //gl.bindBuffer(gl.ARRAY_BUFFER, model.normalBuffer);
-    //gl.bufferData(gl.ARRAY_BUFFER, drawingInfo.normals, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, model.normalBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, drawingInfo.normals, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, model.colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, drawingInfo.colors, gl.STATIC_DRAW);
@@ -99,7 +99,7 @@ function init() {
     function initObject() {
 
         program.a_Position = gl.getAttribLocation(program, 'a_Position');
-        //program.a_Normal = gl.getAttribLocation(program, 'a_Normal');
+        program.a_Normal = gl.getAttribLocation(program, 'a_Normal');
         program.a_Color = gl.getAttribLocation(program, 'a_Color');
         program.a_TexCoord = gl.getAttribLocation(program, 'a_TexCoord');
         // Prepare empty buffer objects for vertex coordinates, colors, and normals
@@ -126,9 +126,6 @@ function init() {
     modelViewMatrix = lookAt(eye, at, up);
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
-    var theta = 0.0;
-    var phi = 0.0;
-
     var image = document.createElement('img');
     image.crossorigin = 'anonymous';
     image.onload = function () {
@@ -149,6 +146,11 @@ function init() {
     };
     image.src = 'shell.jpg';
 
+        
+    var rotateAroundOrbit = true;
+    var theta = 0.0;
+    var phi = 0.0;
+
     function render() {
         window.requestAnimFrame(render);
 
@@ -158,9 +160,11 @@ function init() {
         }
         if (!g4_drawingInfo)
             return;
-
-        theta += 0.01;
-        phi+= 0.005;
+        
+        if (rotateAroundOrbit)   {
+            theta += 0.01;
+            phi+= 0.005;
+        }
 
         let radius = 5;
         let eye = vec3(radius*Math.sin(theta)*Math.cos(phi), radius*Math.sin(theta)*Math.sin(phi), radius*Math.cos(theta));
@@ -173,6 +177,74 @@ function init() {
         
     }
     render();
+
+    var orbit = document.getElementById("orbit_button2");
+    orbit.addEventListener("click", function () {
+        if (rotateAroundOrbit)
+            rotateAroundOrbit = false;//stop rotation around orbit
+        else
+            rotateAroundOrbit = true;//start rotation around orbit
+    });
+
+    var Ka = document.getElementById("Ka4");
+    var Kd = document.getElementById("Kd4");
+    var Ks = document.getElementById("Ks4");
+    var s = document.getElementById("s4");
+    var Le = document.getElementById("Le4");
+
+    var Kav = document.getElementById("Kav4");
+    var Kdv = document.getElementById("Kdv4");
+    var Ksv = document.getElementById("Ksv4");
+    var sv = document.getElementById("sv4");
+    var Lev = document.getElementById("Lev4");
+
+    var ka_initial = 1;
+    var kd_initial = 0.3;
+    var ks_initial = 0.9;
+    var alpha_initial = 96;
+    var le_initial = 1.9;
+
+    gl.uniform1f(gl.getUniformLocation(program, "Ka"), ka_initial);
+    gl.uniform1f(gl.getUniformLocation(program, "Kd"), kd_initial);
+    gl.uniform1f(gl.getUniformLocation(program, "Ks"), ks_initial);
+    gl.uniform1f(gl.getUniformLocation(program, "alpha"), alpha_initial);
+    gl.uniform1f(gl.getUniformLocation(program, "le"), le_initial);
+
+
+    Kav.innerHTML = ka_initial;
+    Ka.addEventListener('input', function(){
+        Kav.innerHTML = this.value;
+        var ka = parseFloat(Kav.innerHTML);
+        gl.uniform1f(gl.getUniformLocation(program, "Ka"), ka);
+    });
+
+    Kdv.innerHTML = kd_initial;
+    Kd.addEventListener('input', function(){
+        Kdv.innerHTML = this.value;
+        var kd = parseFloat(Kdv.innerHTML);
+        gl.uniform1f(gl.getUniformLocation(program, "Kd"), kd);
+    });
+
+    Ksv.innerHTML = ks_initial;
+    Ks.addEventListener('input', function(){
+        Ksv.innerHTML = this.value;
+        var ks = parseFloat(Ksv.innerHTML);
+        gl.uniform1f(gl.getUniformLocation(program, "Ks"), ks);
+    });
+
+    sv.innerHTML = alpha_initial;
+    s.addEventListener('input', function(){
+        sv.innerHTML = this.value;
+        var alpha = parseFloat(sv.innerHTML);
+        gl.uniform1f(gl.getUniformLocation(program, "alpha"), alpha);
+    });
+
+    Lev.innerHTML = le_initial;
+    Le.addEventListener('input', function(){
+        Lev.innerHTML = this.value;
+        var le = parseFloat(Lev.innerHTML);
+        gl.uniform1f(gl.getUniformLocation(program, "le"), le);
+    });
 }
 
 init();
