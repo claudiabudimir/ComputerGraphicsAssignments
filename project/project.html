@@ -13,7 +13,7 @@
 
         <h1>Load uv-coordinates and texture(s) together with an OBJ model and render a
             textured model (W06P4)</h1>
-        <br>
+
         <canvas id="gl-canvas4" width="512" height="512"></canvas>
 
         <!-- Shader's Script -->
@@ -34,13 +34,6 @@
         void main(){
             
             v_TexCoord = a_TexCoord;
-            
-            vec3 pos = (modelViewMatrix * a_Position).xyz;
-            vec3 light = lightPosition.xyz;
-            L = normalize(light - pos);
-            E = normalize(-pos);
-            N = normalize(a_Normal.xyz);
-       
             v_Color = a_Color;
             gl_Position = projectMatrix * modelViewMatrix * a_Position;
 
@@ -49,42 +42,14 @@
             </script>
         <script id="fragment-shader-4" type="x-shader/x-fragment">
         precision mediump float;
-        varying vec3 N, L, E;
         varying vec4 v_Color;
-        
-        uniform float Ka, Ks, Kd, alpha, le;
 
         uniform sampler2D texMap;
         varying vec2 v_TexCoord;
-        void main(){
-
-            vec4 v_Color;
-
-            vec3 H = normalize(L + E);
-
-            float dif = max(dot(L, normalize(N)), 0.0);
-
-            float spec = pow(max(dot(normalize(N), H), 0.0), alpha);
-
-
-            vec4 ambient = vec4((Ka * vec3(le)), 1.0);
-            vec4 specular = vec4((Ks * spec * vec3(le)), 1.0);
-            vec4 diffuse = vec4((Kd * dif *vec3(le)), 1.0);
-            
-            if( dot(L, N) < 0.0 ) {
-                specular = vec4(0.0, 0.0, 0.0, 1.0);
-            } 
-
-            v_Color = (ambient + specular + diffuse) * v_Color; 
-
-            float pi = 3.14;
-            float u = 1.0 - atan(N.z, N.x)/(2.0*pi);
-            float v = acos(N.y)/pi;
-            
-            gl_FragColor = texture2D(texMap, v_TexCoord);
+        void main(){ 
+            gl_FragColor = v_Color * texture2D(texMap, v_TexCoord);
         }
-     
-            </script>
+        </script>
         <script type="text/javascript" src="project.js"></script>
 
     </body>

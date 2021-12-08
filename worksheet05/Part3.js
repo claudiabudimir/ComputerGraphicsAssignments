@@ -1,4 +1,4 @@
-var obj_fn = 'monkey.obj'
+var obj_fn = 'shell.obj'
 
 var g3_objDoc = null;
 var g3_drawingInfo = null;

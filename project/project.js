@@ -9,7 +9,7 @@ function initVertexBuffers(gl, program) {
     var o = new Object();
 
     o.vertexBuffer = createEmptyArrayBuffer(gl, program.a_Position, 3, gl.FLOAT);
-    o.normalBuffer = createEmptyArrayBuffer(gl, program.a_Normal, 3, gl.FLOAT);
+    //o.normalBuffer = createEmptyArrayBuffer(gl, program.a_Normal, 3, gl.FLOAT);
     o.colorBuffer = createEmptyArrayBuffer(gl, program.a_Color, 4, gl.FLOAT);
     o.textureBuffer = createEmptyArrayBuffer(gl, program.a_TexCoord, 2, gl.FLOAT);
     o.indexBuffer = gl.createBuffer();
@@ -34,8 +34,8 @@ function onReadComplete(gl, model, objDoc) {
     gl.bindBuffer(gl.ARRAY_BUFFER, model.vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, drawingInfo.vertices, gl.STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, model.normalBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, drawingInfo.normals, gl.STATIC_DRAW);
+    //gl.bindBuffer(gl.ARRAY_BUFFER, model.normalBuffer);
+    //gl.bufferData(gl.ARRAY_BUFFER, drawingInfo.normals, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, model.colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, drawingInfo.colors, gl.STATIC_DRAW);
@@ -99,7 +99,7 @@ function init() {
     function initObject() {
 
         program.a_Position = gl.getAttribLocation(program, 'a_Position');
-        program.a_Normal = gl.getAttribLocation(program, 'a_Normal');
+        //program.a_Normal = gl.getAttribLocation(program, 'a_Normal');
         program.a_Color = gl.getAttribLocation(program, 'a_Color');
         program.a_TexCoord = gl.getAttribLocation(program, 'a_TexCoord');
         // Prepare empty buffer objects for vertex coordinates, colors, and normals
@@ -164,8 +164,6 @@ function init() {
 
         let radius = 5;
         let eye = vec3(radius*Math.sin(theta)*Math.cos(phi), radius*Math.sin(theta)*Math.sin(phi), radius*Math.cos(theta));
-
-        //eye = vec3(5.0 * Math.sin(theta), 0.0, 5.0 * Math.cos(theta));
 
         modelViewMatrix = lookAt(eye, at, up);
         gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
