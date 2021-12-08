@@ -166,7 +166,7 @@ function init() {
             phi+= 0.005;
         }
 
-        let radius = 5;
+        let radius = 5.5;
         let eye = vec3(radius*Math.sin(theta)*Math.cos(phi), radius*Math.sin(theta)*Math.sin(phi), radius*Math.cos(theta));
 
         modelViewMatrix = lookAt(eye, at, up);
