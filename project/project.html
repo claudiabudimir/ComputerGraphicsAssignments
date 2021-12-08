@@ -16,9 +16,10 @@
         <canvas id="gl-canvas4" width="512" height="512"></canvas>
         <br>
         <div style="text-align: center">
-            <button id="orbit_button2">Enable/Diable Orbit view</button>
+            <button id="orbit_button2">Enable/Disable Orbit view</button>
         </div>
         <br>
+
         <div class="container" style="text-align: center;">
             0<input type="range" min="0" max="1" step="0.01" value="0.1"
                 id="Ka4">1 &nbsp;&nbsp;&nbsp;&nbsp;<label for="Ka4">Ambient
@@ -70,8 +71,7 @@
             gl_Position = projectMatrix * modelViewMatrix * a_Position;
 
         }
-    
-            </script>
+        </script>
         <script id="fragment-shader-4" type="x-shader/x-fragment">
         precision mediump float;
         varying vec3 N, L, E;
@@ -105,8 +105,7 @@
             gl_FragColor = v_Color * texture2D(texMap, v_TexCoord);
         }
      
-            </script>
+        </script>
         <script type="text/javascript" src="project.js"></script>
-
     </body>
 </html>
