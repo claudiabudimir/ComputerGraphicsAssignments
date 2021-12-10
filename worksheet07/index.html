@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<head>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/initShaders.js"></script>
+    <script type="text/javascript" src="../common/MV.js"></script>
+    <script type="text/javascript" src="../common/OBJParser.js"></script>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+
+<html>
+
+<body>
+
+    <h1>Worksheet 7: Environment mapping and normal mapping</h1>
+    <h2>Part 1: Use a cube map to texture a sphere</h2>
+    <canvas id="gl-canvas1" width="512" height="512"></canvas>
+    <br>
+    <div class="container" style="text-align: center;">
+        <button id="incr_button">Increment</button>
+        <button id="decr_button">Decrement</button>
+        <button id="orbit_button">Animation</button>
+        <br><br>
+
+        Select texture filtering mode for magnification:<br>
+        <select id="filterStyleMag">
+            <option sty value="0" selected="selected">NEAREST</option>
+            <option value="1">LINEAR</option>
+        </select>
+        <br>
+        Select texture filtering mode for minification: <br>
+        <select id="filterStyleMin">
+            <option sty value="0" selected="selected">NEAREST</option>
+            <option value="1">LINEAR</option>
+        </select>
+    </div>
+    <br><br>
+    <!-- Shader's Scripts -->
+    <!--Part 1 -->
+    <script id="vertex-shader-1" type="x-shader/x-vertex">
+    attribute vec4 a_Position;
+    attribute vec4 a_Normal; 
+
+    varying vec4 v_Normal;
+    varying vec4 v_Color; 
+
+    uniform vec4 diffuseProduct;
+    uniform vec4 lightPosition;
+
+    uniform mat4 projectMatrix;
+    uniform mat4 modelViewMatrix;
+
+    uniform vec4 lightEmission;
+
+    void main() {
+        gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
+
+        v_Normal = a_Normal;
+
+        vec3 pos = (modelViewMatrix * a_Position).xyz;
+        vec3 L = lightPosition.w == 0.0 ? normalize(lightPosition.xyz):normalize(lightPosition.xyz - pos);
+        vec3 N = normalize(modelViewMatrix * a_Normal).xyz;
+
+        vec4 diffuse = max(dot(L, N), 0.0) * diffuseProduct;
+
+        v_Color = diffuse* lightEmission;
+        v_Color.a = 1.0; 
+    }
+        </script>
+    <script id="fragment-shader-1" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec4 v_Color;
+    varying vec4 v_Normal;
+
+    uniform samplerCube texMap;
+
+    void main(){
+        vec4 N = normalize(v_Normal);
+
+        float pi = 3.14;
+        float u = 1.0 - atan(N.z, N.x)/(2.0*pi);
+        float v = acos(N.y)/pi;
+        
+        vec2 texCoord = vec2(u,v);
+        gl_FragColor = v_Color * textureCube(texMap, N.xyz);
+    }
+        </script>
+    <script type="text/javascript" src="Part1.js"></script>
+</body>
+
+</html>
