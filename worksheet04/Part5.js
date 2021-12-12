@@ -79,7 +79,6 @@ function init() {
 
         tetrahedron(va, vb, vc, vd, numTimesToSubdivide);
 
-        console.log(pointsArray);
         gl5.deleteBuffer(gl5.p_buffer);
         gl5.p_buffer = gl5.createBuffer();
         gl5.bindBuffer(gl5.ARRAY_BUFFER, gl5.p_buffer);

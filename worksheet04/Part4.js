@@ -74,7 +74,6 @@ function init() {
 
         tetrahedron(va, vb, vc, vd, numTimesToSubdivide);
 
-        console.log(pointsArray);
         gl.deleteBuffer(gl.p_buffer);
         gl.p_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.p_buffer);
@@ -172,11 +171,11 @@ function init() {
             rotateAroundOrbit = true;//start rotation around orbit
     });
     
-    var ka_initial = 0.6;
-    var kd_initial = 0.6;
-    var ks_initial = 0.9;
-    var alpha_initial = 96;
-    var le_initial = 1.20;
+    var ka_initial = 0.22;
+    var kd_initial = 0.85;
+    var ks_initial = 0.36;
+    var alpha_initial = 41;
+    var le_initial = 0.88;
 
     gl.uniform1f(gl.getUniformLocation(program, "Ka"), ka_initial);
     gl.uniform1f(gl.getUniformLocation(program, "Kd"), kd_initial);
