@@ -137,17 +137,12 @@ function init() {
         image.crossorigin = 'anonymous';
         image.onload = function (event) {
             var image = event.target;
-
-            // Insert WebGL texture initialization her
-            console.log(image);
-            console.log(image.texturetarget);
             gl.texImage2D(image.texturetarget, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
             j++;
 
         }
         image.src = cubefiles[i];
         image.texturetarget = gl.TEXTURE_CUBE_MAP_POSITIVE_X + i;
-        console.log("image name " + cubefiles[i]);
     }
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 

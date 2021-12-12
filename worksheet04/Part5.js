@@ -13,7 +13,7 @@ function init() {
     gl5.clear(gl5.COLOR_BUFFER_BIT);
 
     //Init shaders
-    gl5.clear(gl.COLOR_BUFFER_BIT);
+    gl5.clear(gl5.COLOR_BUFFER_BIT);
 
     // Load shaders and initialize attribute buffers
     var program = initShaders(gl5, "vertex-shader-5", "fragment-shader-5");
