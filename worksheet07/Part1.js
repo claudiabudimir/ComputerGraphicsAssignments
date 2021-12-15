@@ -105,7 +105,7 @@ function init() {
     gl.uniform4fv(gl.getUniformLocation(program, "lightEmission"), flatten(lightEmission));
 
     //projectMatrix & modelViewMatrixLoc
-    var fovy = 20.0;
+    var fovy = 60.0;
     var aspect = canvas.width / canvas.height;
     var near = 0.5;
     var far = 100.0;
@@ -160,7 +160,7 @@ function init() {
         if (rotateAroundOrbit)
             theta += 0.01;
 
-        eye = vec3(10.0 * Math.sin(theta), 2.0, 10.0 * Math.cos(theta));
+        eye = vec3(5.0 * Math.sin(theta), 2.0, 5.0 * Math.cos(theta));
         modelViewMatrix = lookAt(eye, at, up);
         gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
        

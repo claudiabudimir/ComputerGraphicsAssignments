@@ -1,23 +1,23 @@
 function init() {
     //Init the canvas
-    canvas = document.getElementById("gl-canvas2");
-    gl2 = WebGLUtils.setupWebGL(canvas);
+    canvas = document.getElementById("gl-canvas3");
+    gl3 = WebGLUtils.setupWebGL(canvas);
 
     //Set the viewport
-    gl2.viewport(0, 0, canvas.width, canvas.height);
+    gl3.viewport(0, 0, canvas.width, canvas.height);
 
     //Clear
-    gl2.clearColor(0.3921, 0.5843, 0.9294, 1.0);
-    gl2.clear(gl2.COLOR_BUFFER_BIT);
+    gl3.clearColor(0.3921, 0.5843, 0.9294, 1.0);
+    gl3.clear(gl3.COLOR_BUFFER_BIT);
 
     //Init shaders
-    var program = initShaders(gl2, "vertex-shader-2", "fragment-shader-2");
-    gl2.useProgram(program);
+    var program = initShaders(gl3, "vertex-shader-3", "fragment-shader-3");
+    gl3.useProgram(program);
 
     //Enable a depth test
-    gl2.enable(gl2.DEPTH_TEST);
-    gl2.enable(gl2.CULL_FACE);//Enable back face culling, The initial value of glCullFace is GL_BACK.
-    gl2.frontFace(gl2.CCW); // Passing GL_CCW to mode selects counterclockwise polygons as front-facing 
+    gl3.enable(gl3.DEPTH_TEST);
+    gl3.enable(gl3.CULL_FACE);//Enable back face culling, The initial value of glCullFace is GL_BACK.
+    gl3.frontFace(gl3.CCW); // Passing GL_CCW to mode selects counterclockwise polygons as front-facing 
 
     //Approximation of a sphere by recursive subdivision algorithm
     var va = vec4(0.0, 0.0, 1.0, 1);
@@ -63,8 +63,8 @@ function init() {
     var index = 0;
     var pointsArray = [];
     var normalsArray = [];
-    gl2.p_buffer = null;
-    gl2.n_buffer = null;
+    gl3.p_buffer = null;
+    gl3.n_buffer = null;
 
     var quadvertices = [vec4(-1.0, -1.0, 0.999, 1), vec4(1, -1, 0.999, 1), vec4(-1, 1, 0.999, 1), vec4(1, 1, 0.999, 1)];
     function drawquad() {
@@ -80,24 +80,24 @@ function init() {
         tetrahedron(va, vb, vc, vd, numTimesToSubdivide);
         drawquad();
         //Buffer Creation For Vertices
-        gl2.deleteBuffer(gl2.p_buffer);
-        gl2.p_buffer = gl2.createBuffer();
-        gl2.bindBuffer(gl2.ARRAY_BUFFER, gl2.p_buffer);
-        gl2.bufferData(gl2.ARRAY_BUFFER, flatten(pointsArray), gl2.STATIC_DRAW);
+        gl3.deleteBuffer(gl3.p_buffer);
+        gl3.p_buffer = gl3.createBuffer();
+        gl3.bindBuffer(gl3.ARRAY_BUFFER, gl3.p_buffer);
+        gl3.bufferData(gl3.ARRAY_BUFFER, flatten(pointsArray), gl3.STATIC_DRAW);
 
-        var a_Position = gl2.getAttribLocation(program, "a_Position");
-        gl2.vertexAttribPointer(a_Position, 4, gl2.FLOAT, false, 0, 0);
-        gl2.enableVertexAttribArray(a_Position);
+        var a_Position = gl3.getAttribLocation(program, "a_Position");
+        gl3.vertexAttribPointer(a_Position, 4, gl3.FLOAT, false, 0, 0);
+        gl3.enableVertexAttribArray(a_Position);
 
-        gl2.deleteBuffer(gl2.n_buffer);
+        gl3.deleteBuffer(gl3.n_buffer);
 
-        gl2.n_buffer = gl2.createBuffer();
-        gl2.bindBuffer(gl2.ARRAY_BUFFER, gl2.n_buffer);
-        gl2.bufferData(gl2.ARRAY_BUFFER, flatten(normalsArray), gl2.STATIC_DRAW);
+        gl3.n_buffer = gl3.createBuffer();
+        gl3.bindBuffer(gl3.ARRAY_BUFFER, gl3.n_buffer);
+        gl3.bufferData(gl3.ARRAY_BUFFER, flatten(normalsArray), gl3.STATIC_DRAW);
 
-        var a_Normal = gl2.getAttribLocation(program, "a_Normal");
-        gl2.vertexAttribPointer(a_Normal, 4, gl2.FLOAT, false, 0, 0);
-        gl2.enableVertexAttribArray(a_Normal);
+        var a_Normal = gl3.getAttribLocation(program, "a_Normal");
+        gl3.vertexAttribPointer(a_Normal, 4, gl3.FLOAT, false, 0, 0);
+        gl3.enableVertexAttribArray(a_Normal);
     }
 
     createSphere();//first call
@@ -105,22 +105,24 @@ function init() {
     //projectMatrix & modelViewMatrixLoc
     var fovy = 60.0;
     var aspect = canvas.width / canvas.height;
-    var near = 0.5;
+    var near = 0.1;
     var far = 100.0;
     const up = vec3(0.0, 1.0, 0.0);
     var at = vec3(0.0, 0.0, 0.0);
     var eye = vec3(0.0, 0.0, 4.9);//is in one-point (front) perspective
 
-    var projectMatrix = gl2.getUniformLocation(program, 'projectMatrix');
+    var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
     var pj = perspective(fovy, aspect, near, far);
-    gl2.uniformMatrix4fv(projectMatrix, gl2.FALSE, flatten(pj));
+    gl3.uniformMatrix4fv(projectMatrix, gl3.FALSE, flatten(pj));
 
-    var modelViewMatrixLoc = gl2.getUniformLocation(program, "modelViewMatrix");
-    var texMatrix = gl2.getUniformLocation(program, 'texMatrix');
-
-    var cubeMap = gl2.createTexture();
-    gl2.bindTexture(gl2.TEXTURE_CUBE_MAP, cubeMap);
-    gl2.uniform1i(gl2.getUniformLocation(program, "texMap"), 0);
+    var modelViewMatrixLoc = gl3.getUniformLocation(program, "modelViewMatrix");
+    var texMatrix = gl3.getUniformLocation(program, 'texMatrix');
+    var reflective = gl3.getUniformLocation(program, 'reflective');
+    var eye_Position = gl3.getUniformLocation(program, 'eye_Position');
+    
+    var cubeMap = gl3.createTexture();
+    gl3.bindTexture(gl3.TEXTURE_CUBE_MAP, cubeMap);
+    gl3.uniform1i(gl3.getUniformLocation(program, "texMap"), 0);
 
     var cubefiles = ['textures/cm_left.png', // POSITIVE_X
         'textures/cm_right.png', // NEGATIVE_X
@@ -135,16 +137,16 @@ function init() {
         image.crossorigin = 'anonymous';
         image.onload = function (event) {
             var image = event.target;
-            gl2.texImage2D(image.texturetarget, 0, gl2.RGB, gl2.RGB, gl2.UNSIGNED_BYTE, image);
+            gl3.texImage2D(image.texturetarget, 0, gl3.RGB, gl3.RGB, gl3.UNSIGNED_BYTE, image);
             j++;
 
         }
         image.src = cubefiles[i];
-        image.texturetarget = gl2.TEXTURE_CUBE_MAP_POSITIVE_X + i;
+        image.texturetarget = gl3.TEXTURE_CUBE_MAP_POSITIVE_X + i;
     }
-    gl2.pixelStorei(gl2.UNPACK_FLIP_Y_WEBGL, true);
-    gl2.texParameteri(gl2.TEXTURE_CUBE_MAP, gl2.TEXTURE_MIN_FILTER, gl2.LINEAR);
-    gl2.texParameteri(gl2.TEXTURE_CUBE_MAP, gl2.TEXTURE_MAG_FILTER, gl2.LINEAR);
+    gl3.pixelStorei(gl3.UNPACK_FLIP_Y_WEBGL, true);
+    gl3.texParameteri(gl3.TEXTURE_CUBE_MAP, gl3.TEXTURE_MIN_FILTER, gl3.LINEAR);
+    gl3.texParameteri(gl3.TEXTURE_CUBE_MAP, gl3.TEXTURE_MAG_FILTER, gl3.LINEAR);
 
     var rotateAroundOrbit = true;
     var theta = 0;
@@ -154,28 +156,31 @@ function init() {
             theta += 0.01;
 
         eye = vec3(5.0 * Math.sin(theta), 2.0, 5.0 * Math.cos(theta));
+        gl3.uniform3fv(eye_Position, flatten(eye));
         modelViewMatrix = lookAt(eye, at, up);
-        gl2.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-        gl2.clear(gl2.COLOR_BUFFER_BIT | gl2.DEPTH_BUFFER_BIT);
+        gl3.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+        gl3.clear(gl3.COLOR_BUFFER_BIT | gl3.DEPTH_BUFFER_BIT);
 
         //Sphere
-        gl2.uniformMatrix4fv(texMatrix, gl2.FALSE, flatten(mat4()));
-        gl2.drawArrays(gl2.TRIANGLES, 0, index - 6);// we need to substract 6 for the vertices added for the quad
+        gl3.uniform1i(reflective, true);
+        gl3.uniformMatrix4fv(texMatrix, gl3.FALSE, flatten(mat4()));
+        gl3.drawArrays(gl3.TRIANGLES, 0, index - 6);// we need to substract 6 for the vertices added for the quad
 
         //Quad
         var projMatrixInversed = inverse(pj);//the inverse of the projection matrix to go from clip coordinates to camera coordinates
         var modelViewMatrixInversed = inverse(modelViewMatrix);//the inverse of the rotational part of the view matrix (no translation) to get direction vectors in world coordinates
         var finalTex = mult(modelViewMatrixInversed, projMatrixInversed);
-        gl2.uniformMatrix4fv(texMatrix, gl2.FALSE, flatten(finalTex));
-        gl2.drawArrays(gl2.TRIANGLES, index - 6, 6);
+        gl3.uniform1i(reflective, false);
+        gl3.uniformMatrix4fv(texMatrix, gl3.FALSE, flatten(finalTex));
+        gl3.drawArrays(gl3.TRIANGLES, index - 6, 6);
 
         window.requestAnimFrame(render);
     }
     render();//initial render call
 
-    var increment = document.getElementById("incr_button1");
-    var decrement = document.getElementById("decr_button1");
-    var animation = document.getElementById("orbit_button1");
+    var increment = document.getElementById("incr_button2");
+    var decrement = document.getElementById("decr_button2");
+    var animation = document.getElementById("orbit_button2");
 
     increment.addEventListener("click", function () {
         if (numTimesToSubdivide < 5) {
@@ -207,25 +212,25 @@ function init() {
             rotateAroundOrbit = true;//start rotation around orbit
     });
 
-    var filter1 = document.getElementById("filterStyleMag1");
+    var filter1 = document.getElementById("filterStyleMag2");
     filter1.onchange = function () {
         var filterStyleMag = filter1.options[filter1.selectedIndex].value;
 
         if (filterStyleMag == 0) {
-            gl2.texParameteri(gl2.TEXTURE_CUBE_MAP, gl2.TEXTURE_MAG_FILTER, gl2.NEAREST);
+            gl3.texParameteri(gl3.TEXTURE_CUBE_MAP, gl3.TEXTURE_MAG_FILTER, gl3.NEAREST);
         } else if (filterStyleMag == 1) {
-            gl2.texParameteri(gl2.TEXTURE_CUBE_MAP, gl2.TEXTURE_MAG_FILTER, gl2.LINEAR);
+            gl3.texParameteri(gl3.TEXTURE_CUBE_MAP, gl3.TEXTURE_MAG_FILTER, gl3.LINEAR);
         }
     }
 
-    var filter2 = document.getElementById("filterStyleMin1");
+    var filter2 = document.getElementById("filterStyleMin2");
     filter2.onchange = function () {
         var filterStyleMin = filter2.options[filter2.selectedIndex].value;
 
         if (filterStyleMin == 0) {
-            gl2.texParameteri(gl2.TEXTURE_CUBE_MAP, gl2.TEXTURE_MIN_FILTER, gl2.NEAREST);;
+            gl3.texParameteri(gl3.TEXTURE_CUBE_MAP, gl3.TEXTURE_MIN_FILTER, gl3.NEAREST);;
         } else if (filterStyleMin == 1) {
-            gl2.texParameteri(gl2.TEXTURE_CUBE_MAP, gl2.TEXTURE_MIN_FILTER, gl2.LINEAR);
+            gl3.texParameteri(gl3.TEXTURE_CUBE_MAP, gl3.TEXTURE_MIN_FILTER, gl3.LINEAR);
         }
     }
 }
