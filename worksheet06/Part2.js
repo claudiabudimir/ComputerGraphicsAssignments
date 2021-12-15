@@ -56,7 +56,7 @@ function init() {
     //initialize vextices, textures and colors vectors
     var vertices = [vec3(-4.0, -1.0, -1.0), vec3(4.0, -1.0, -1.0), vec3(4.0, -1.0, -21.0), vec3(-4.0, -1.0, -21.0)];
     var textures = [vec2(-1.5, 0.0), vec2(2.5, 0.0), vec2(2.5, 10.0), vec2(-1.5, 10.0)];
-    var colors = [vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0)]; // Optional - Remove a_Color and v_Color from vertex(s)
+    var colors = [vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0)]; 
     
     //vertices buffer creation
     var p_buffer = gl2.createBuffer();
