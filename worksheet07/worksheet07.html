@@ -195,8 +195,8 @@
         void main(){
             vec3 N = normalize(v_Normal.xyz);
             if(reflective){
-                vec3 r = v_Normal.xyz - eye_Position;
-                N = reflect(r, v_Normal.xyz);
+                vec3 incident = v_Normal.xyz - eye_Position;
+                N = reflect(incident, v_Normal.xyz);
             }
             gl_FragColor = textureCube(texMap, N);
         }
@@ -236,7 +236,7 @@
         vec3 N = normalize(v_Normal.xyz);
 
         if(reflective){
-            vec3 r = v_Normal.xyz - eye_Position;
+            vec3 incident = v_Normal.xyz - eye_Position;
             float pi = acos(0.0) * 2.0;
             float u = 1.0-((atan(N.z, N.x)/(2.0*pi)));
             float v = 1.0-acos(N.y)/(pi);
@@ -244,7 +244,7 @@
             vec2 texCoord = vec2(u,v);
             vec3 bumpTex = texture2D(bumpMap, texCoord).xyz * 2.0 - 1.0;
             vec3 bumpTexRotated = rotate_to_normal(N.xyz, bumpTex);
-            N = reflect(r, bumpTexRotated);
+            N = reflect(incident, bumpTexRotated);
         }
 
         gl_FragColor = textureCube(texMap, N);
