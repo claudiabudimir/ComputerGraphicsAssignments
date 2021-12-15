@@ -132,7 +132,7 @@
         v_Color = diffuse* lightEmission;
         v_Color.a = 1.0; 
     }
-        </script>
+    </script>
     <script id="fragment-shader-1" type="x-shader/x-fragment">
     precision mediump float;
 
@@ -161,7 +161,7 @@
 
         void main() {
 
-            v_Normal = a_Normal;
+            v_Normal = texMatrix * a_Normal;
             gl_Position =  projectMatrix * modelViewMatrix * texMatrix * a_Position ;
 
         }
@@ -207,22 +207,17 @@
         precision mediump float;
 
         varying vec4 v_Normal;
-
         uniform vec3 eye_Position;
         uniform samplerCube texMap;
         uniform bool reflective;
 
         void main(){
-
             vec3 N = normalize(v_Normal.xyz);
-
             if(reflective){
-                vec3 aux = v_Normal.xyz - eye_Position;
-                N = reflect(aux, v_Normal.xyz);
+                vec3 r = v_Normal.xyz - eye_Position;
+                N = reflect(r, v_Normal.xyz);
             }
-
             gl_FragColor = textureCube(texMap, N);
-
         }
     </script>
     <script type="text/javascript" src="Part3.js"></script>
@@ -233,36 +228,29 @@
     attribute vec4 a_Normal; 
 
     varying vec4 v_Normal;
-
     uniform mat4 projectMatrix;
     uniform mat4 modelViewMatrix;
     uniform mat4 texMatrix;
 
     void main() {
-
         v_Normal =  texMatrix * a_Normal;
-        gl_Position =  projectMatrix * modelViewMatrix * texMatrix * a_Position ;
-
+        gl_Position =  projectMatrix * modelViewMatrix * texMatrix * a_Position;
     }
-
         </script>
     <script id="fragment-shader-4" type="x-shader/x-fragment">
     precision mediump float;
 
     varying vec4 v_Normal;
-
     uniform samplerCube texMap;
     uniform sampler2D bumpMap;
-    uniform bool reflective;
     uniform vec3 eye_Position;
 
-    vec3 rotate_to_normal(vec3 normal, vec3 v)
-    {
-      float a = 1.0/(1.0 + normal.z);
-      float b = -normal.x*normal.y*a;
-      return vec3(1.0 - normal.x*normal.x*a, b, -normal.x)*v.x
-           + vec3(b, 1.0 - normal.y*normal.y*a, -normal.y)*v.y
-           + normal*v.z;
+    uniform bool reflective;
+
+    vec3 rotate_to_normal(vec3 normal, vec3 v) {
+        float a = 1.0/(1.0 + normal.z);
+        float b = -normal.x*normal.y*a;
+        return vec3(1.0 - normal.x*normal.x*a, b, -normal.x)*v.x + vec3(b, 1.0 - normal.y*normal.y*a, -normal.y)*v.y + normal*v.z;
     }
 
     void main(){
@@ -270,27 +258,20 @@
         vec3 N = normalize(v_Normal.xyz);
 
         if(reflective){
-
-            vec3 aux = v_Normal.xyz - eye_Position;
-
-            float pi = 3.14159265358979323846;
-            float u = 1.0 - atan(N.z, N.x)/(2.0*pi);
-            float v = acos(N.y)/pi;
+            vec3 r = v_Normal.xyz - eye_Position;
+            float pi = acos(0.0) * 2.0;
+            float u = 1.0-((atan(N.z, N.x)/(2.0*pi)));
+            float v = 1.0-acos(N.y)/(pi);
         
             vec2 texCoord = vec2(u,v);
+            vec3 bumpTex = texture2D(bumpMap, texCoord).xyz * 2.0 - 1.0;
+            vec3 bumpTexRotated = rotate_to_normal(N.xyz, bumpTex);
 
-            vec4 b = texture2D(bumpMap, texCoord);
-
-            vec3 bb = normalize(2.0*b.xyz - 1.0);
-
-            vec3 rotated = rotate_to_normal(N, bb);
-
-            N = reflect(aux, rotated);
+            N = reflect(r, bumpTexRotated);
         }
 
         gl_FragColor = textureCube(texMap, N);
     }
-
         </script>
     <script type="text/javascript" src="Part4.js"></script>
 </body>
