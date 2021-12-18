@@ -104,22 +104,18 @@ function init() {
     var playground = initShaders(gl1, "vertex-shader-ground", "fragment-shader-ground");
     gl1.useProgram(playground);
 
-    function initGround() {
-
+    function createPlayground() {
         playground.position = gl1.getAttribLocation(playground, "a_Position");
         playground.tex = gl1.getAttribLocation(playground, "a_TexCoord");
-
         var ground = [vec3(-2.0, -1.0, -1.0), vec3(-2.0, -1.0, -5.0), vec3(2.0, -1.0, -1.0), vec3(2.0, -1.0, -5.0)]; // 2,0,1   1,3,2
         var vertices_coordinates = [ground[2], ground[0], ground[1], ground[1], ground[3], ground[2]];
         var tex_coord = [vec2(-1.0, 1.0), vec2(-1.0, -1.0), vec2(1.0, 1.0), vec2(1.0, -1.0)]; //change
         var textures_coordinates = [tex_coord[2], tex_coord[0], tex_coord[1], tex_coord[1], tex_coord[3], tex_coord[2]];
-
-        var modelground = initialize_playground_buffers(gl1, playground, vertices_coordinates, textures_coordinates);
-
-        return modelground;
+        var model_playground = initialize_playground_buffers(gl1, playground, vertices_coordinates, textures_coordinates);
+        return model_playground;
     }
 
-    var modelground = initGround();
+    var model_playground = createPlayground();
 
     var image = document.createElement('img');
     image.crossorigin = 'anonymous';
@@ -186,8 +182,8 @@ function init() {
         mvm_ground = lookAt(eye, at, up);
         gl1.uniformMatrix4fv(mv_ground, false, flatten(mvm_ground));
 
-        initAttributeVariable(gl1, playground.position, modelground.vertexBuffer, 3, gl1.FLOAT);
-        initAttributeVariable(gl1, playground.tex, modelground.texBuffer, 2, gl1.FLOAT);
+        initAttributeVariable(gl1, playground.position, model_playground.vertexBuffer, 3, gl1.FLOAT);
+        initAttributeVariable(gl1, playground.tex, model_playground.texBuffer, 2, gl1.FLOAT);
 
         gl1.uniform1i(gl1.getUniformLocation(playground, "texMap"), 0);
         gl1.drawArrays(gl1.TRIANGLES, 0, 6);
