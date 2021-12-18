@@ -30,25 +30,19 @@ function init() {
     modelViewMatrix = lookAt(eye, at, up);
     gl1.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
-    //initialize vextices, textures and colors vectors
-    var large_rect = [vec3(-2.0, -1.0, -1.0), vec3(-2.0, -1.0, -5.0), vec3(2.0, -1.0, -1.0), vec3(2.0, -1.0, -5.0)]; // 2,0,1   1,3,2
-    var small_quad1 = [vec3(0.25, -0.5, -1.25), vec3(0.25, -0.5, -1.75), vec3(0.75, -0.5, -1.25), vec3(0.75, -0.5, -1.75)]; // 2,0,1   1,3,2
-    var small_quad2 = [vec3(-1.0, -1.0, -2.5), vec3(-1.0, -1.0, -3.0), vec3(-1.0, 0.0, -2.5), vec3(-1.0, 0.0, -3.0)]; // 2,0,1   1,3,2
+    //initialize vertices, textures and colors vectors
+    var ground = [vec3(-2.0, -1.0, -1.0), vec3(-2.0, -1.0, -5.0), vec3(2.0, -1.0, -1.0), vec3(2.0, -1.0, -5.0)];
+    var quad1 = [vec3(0.25, -0.5, -1.25), vec3(0.25, -0.5, -1.75), vec3(0.75, -0.5, -1.25), vec3(0.75, -0.5, -1.75)];
+    var quad2 = [vec3(-1.0, -1.0, -2.5), vec3(-1.0, -1.0, -3.0), vec3(-1.0, 0.0, -2.5), vec3(-1.0, 0.0, -3.0)];
+    var tex_coord = [vec2(-1.0, 1.0), vec2(-1.0, -1.0), vec2(1.0, 1.0), vec2(1.0, -1.0)]; 
 
-    var all_points =[ large_rect[2], large_rect[0], large_rect[1], large_rect[1], large_rect[3], large_rect[2],
-     small_quad1[2], small_quad1[0], small_quad1[1], small_quad1[1], small_quad1[3], small_quad1[2],
-     small_quad2[2], small_quad2[0], small_quad2[1], small_quad2[1], small_quad2[3], small_quad2[2] ] ;
-
-    var tex_coord = [vec2(-1.0, 1.0), vec2(-1.0, -1.0), vec2(1.0, 1.0), vec2(1.0, -1.0)]; //change
-
-    var all_tex = [tex_coord[2], tex_coord[0], tex_coord[1], tex_coord[1], tex_coord[3], tex_coord[2],
-    tex_coord[2], tex_coord[0], tex_coord[1], tex_coord[1], tex_coord[3], tex_coord[2], 
-    tex_coord[2], tex_coord[0], tex_coord[1], tex_coord[1], tex_coord[3], tex_coord[2]]
+    var vertices_coordinates =[ ground[2], ground[0], ground[1], ground[1], ground[3], ground[2], quad1[2], quad1[0], quad1[1], quad1[1], quad1[3], quad1[2], quad2[2], quad2[0], quad2[1], quad2[1], quad2[3], quad2[2] ] ;
+    var textures_coordinates = [tex_coord[2], tex_coord[0], tex_coord[1], tex_coord[1], tex_coord[3], tex_coord[2], tex_coord[2], tex_coord[0], tex_coord[1], tex_coord[1], tex_coord[3], tex_coord[2], tex_coord[2], tex_coord[0], tex_coord[1], tex_coord[1], tex_coord[3], tex_coord[2]];
     
     //vertices buffer creation
     var p_buffer = gl1.createBuffer();
     gl1.bindBuffer(gl1.ARRAY_BUFFER, p_buffer);
-    gl1.bufferData(gl1.ARRAY_BUFFER, flatten(all_points), gl1.STATIC_DRAW);
+    gl1.bufferData(gl1.ARRAY_BUFFER, flatten(vertices_coordinates), gl1.STATIC_DRAW);
 
     var a_Position = gl1.getAttribLocation(program, "a_Position");
     gl1.vertexAttribPointer(a_Position, 3, gl1.FLOAT, false, 0, 0);
@@ -57,7 +51,7 @@ function init() {
     //textures buffer creation
     var t_buffer = gl1.createBuffer();
     gl1.bindBuffer(gl1.ARRAY_BUFFER, t_buffer);
-    gl1.bufferData(gl1.ARRAY_BUFFER, flatten(all_tex), gl1.STATIC_DRAW);
+    gl1.bufferData(gl1.ARRAY_BUFFER, flatten(textures_coordinates), gl1.STATIC_DRAW);
 
     var a_TexCoord = gl1.getAttribLocation(program, "a_TexCoord");
     gl1.vertexAttribPointer(a_TexCoord, 2, gl1.FLOAT, false, 0, 0);
@@ -67,8 +61,6 @@ function init() {
     var image = document.createElement('img');
     image.crossorigin = 'anonymous';
     image.onload = function () {
-        // Insert WebGL texture initialization her
-
         var texture = gl1.createTexture();
         gl1.activeTexture(gl1.TEXTURE0)
         gl1.bindTexture(gl1.TEXTURE_2D, texture);
@@ -80,10 +72,8 @@ function init() {
 
         gl1.texParameteri(gl1.TEXTURE_2D, gl1.TEXTURE_WRAP_S, gl1.REPEAT);
         gl1.texParameteri(gl1.TEXTURE_2D, gl1.TEXTURE_WRAP_T, gl1.REPEAT);
-
         gl1.texParameteri(gl1.TEXTURE_2D, gl1.TEXTURE_MIN_FILTER, gl1.LINEAR);
         gl1.texParameteri(gl1.TEXTURE_2D, gl1.TEXTURE_MAG_FILTER, gl1.LINEAR);
-        // Insert WebGL texture initialization here
     };
     image.src = 'xamp23.png';
 
@@ -109,11 +99,11 @@ function init() {
     function render() {
         gl1.clear(gl1.COLOR_BUFFER_BIT | gl1.DEPTH_BUFFER_BIT);
         //Background
-        gl1.uniform1i(gl1.getUniformLocation(program, "texMap"), 0);
+        gl1.uniform1i(gl1.getUniformLocation(program, "texMap"), 0);//texture0 for background
         gl1.drawArrays(gl1.TRIANGLES, 0, 6);
 
-        //Other quads
-        gl1.uniform1i(gl1.getUniformLocation(program, "texMap"), 1);
+        //Smaller quads
+        gl1.uniform1i(gl1.getUniformLocation(program, "texMap"), 1);//texture1 for quads
         gl1.drawArrays(gl1.TRIANGLES, 6, 12 );
         window.requestAnimFrame(render);
     }
