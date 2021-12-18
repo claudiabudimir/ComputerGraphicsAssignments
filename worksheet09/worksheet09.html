@@ -21,7 +21,7 @@
     </div>
    <br>
    <!--Part 1 -->
-    <script id="vertex-shader-1obj" type="x-shader/x-vertex">
+    <script id="vertex-shader-object" type="x-shader/x-vertex">
         attribute vec4 a_Position;
         attribute vec4 a_Normal; 
         attribute vec4 a_Color;
@@ -35,7 +35,7 @@
             gl_Position =  projectMatrix * modelViewMatrix * a_Position ;
         }
     </script>
-    <script id="fragment-shader-1obj" type="x-shader/x-fragment">
+    <script id="fragment-shader-object" type="x-shader/x-fragment">
         precision mediump float;
         varying vec4 v_Color;
 
@@ -44,7 +44,7 @@
             gl_FragColor = (visibility == 1.0) ? v_Color : vec4(0.0,0.0,0.0, 0.7);
         }
     </script>
-    <script id="vertex-shader-1ground" type="x-shader/x-vertex">
+    <script id="vertex-shader-ground" type="x-shader/x-vertex">
         attribute vec4 a_Position;
         attribute vec2 a_TexCoord;
         
@@ -59,7 +59,7 @@
             gl_Position =  projectMatrix * modelViewMatrix * a_Position;
         }
     </script>
-    <script id="fragment-shader-1ground" type="x-shader/x-fragment">
+    <script id="fragment-shader-ground" type="x-shader/x-fragment">
         precision mediump float;
 
         varying vec2 v_TexCoord;
