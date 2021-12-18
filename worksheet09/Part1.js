@@ -231,7 +231,8 @@ function init() {
         light[2] = 2*Math.cos(theta);
         
         // Model-view matrix for shadow then render
-        var modelViewMatrix = mult(modelViewMatrix, translate(light[0], light[1],light[2]));
+        let modelViewMatrix = lookAt(eye, at, vec3(0.0, 1.0, 0.0));
+        modelViewMatrix = mult(modelViewMatrix, translate(light[0], light[1],light[2]));
         modelViewMatrix = mult(modelViewMatrix, m);
         modelViewMatrix = mult(modelViewMatrix, translate(-light[0],-light[1], -light[2]));
 
