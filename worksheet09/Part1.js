@@ -314,25 +314,23 @@ function init() {
 
     render();
 
-    var motion1 = document.getElementById("motion1");
+    var motion = document.getElementById("motion");
 
-    motion1.addEventListener("click", function () {
-        if (motion)
-            motion = false;
-        else motion = true;
+    motion.addEventListener("click", function () {
+        motion = !motion;
     });
 
-    var above1 = document.getElementById("above1");
+    var view = document.getElementById("view");
 
-    above1.addEventListener("click", function () {
+    view.addEventListener("click", function () {
         if (above)
             above = false;
         else above = true;
     });
 
-    var light1 = document.getElementById("light1");
+    var light = document.getElementById("light");
 
-    light1.addEventListener("click", function () {
+    light.addEventListener("click", function () {
         if (light)
             light = false;
         else light = true;
