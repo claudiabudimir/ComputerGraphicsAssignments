@@ -102,9 +102,7 @@
         uniform float visibility;
         
         void main(){
-
-            vec3 v = vec3(visibility);
-            gl_FragColor = vec4(v, 1) * texture2D(texMap, v_TexCoord);
+            gl_FragColor = vec4(vec3(visibility), 1) * texture2D(texMap, v_TexCoord);
         }
         </script>
     <script type="text/javascript" src="Part3.js"></script>
@@ -134,12 +132,7 @@
         uniform float visibility;
         
         void main(){
-
-            if(visibility == 1.0){
-                gl_FragColor = vec4(visibility) * texture2D(texMap, v_TexCoord);
-            }else{
-                gl_FragColor = vec4(0.0,0.0,0.0, 0.33);
-            }
+            gl_FragColor = (visibility == 1.0) ? texture2D(texMap, v_TexCoord) : vec4(0.0,0.0,0.0, 0.35);
         }
         </script>
     <script type="text/javascript" src="Part4.js"></script>

@@ -106,7 +106,7 @@ function init() {
         gl4.clear(gl4.COLOR_BUFFER_BIT | gl4.DEPTH_BUFFER_BIT);
         gl4.enable(gl4.DEPTH_TEST);
         gl4.enable(gl4.BLEND);
-        gl4.blendFunc(gl4.SRC_ALPHA, gl4.ONE_MINUS_SRC_ALPHA);
+        gl4.blendFunc(gl4.SRC_ALPHA, gl4.ONE_MINUS_SRC_ALPHA);//set up the desired source and destination factor
        
         //Background
         gl4.uniform1f(gl4.getUniformLocation(program, "visibility"), 1);// background should be visible
