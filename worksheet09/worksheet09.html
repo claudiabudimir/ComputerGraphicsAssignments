@@ -23,10 +23,7 @@
         <button id="light1">Light animation</button>
     </div>
     <br>
-    <h2>Part 2: Shadow mapping</h2>
-    <canvas id="gl-canvas2" width="512" height="512"></canvas>
-    <br>
-    
+
     <!-- Shader's Scripts -->
     <!--Part 1 -->
     <script id="vertex-shader-1obj" type="x-shader/x-vertex">
@@ -67,8 +64,6 @@
             v_TexCoord = a_TexCoord;
             gl_Position =  projectMatrix * modelViewMatrix * a_Position;
         }
-
-
     </script>
     <script id="fragment-shader-1ground" type="x-shader/x-fragment">
         precision mediump float;
@@ -83,18 +78,6 @@
 
     </script>
     <script type="text/javascript" src="Part1.js"></script>
-
-    <!--Part 2 -->
-
-    <script id="vertex-shader-2" type="x-shader/x-vertex">
-
-    </script>
-
-
-    <script id="fragment-shader-2" type="x-shader/x-fragment">
-
-    </script>
-    <script type="text/javascript" src="W09P2.js"></script>
 </body>
 
 
