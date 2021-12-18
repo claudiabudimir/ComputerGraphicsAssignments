@@ -1,7 +1,7 @@
 var obj_fn = 'teapot.obj'
 
-var g_objDoc = null; // Info parsed from OBJ file
-var g_drawingInfo = null; // Info for drawing the 3D model with WebGL
+var g1_objDoc = null; // Info parsed from OBJ file
+var g1_drawingInfo = null; // Info for drawing the 3D model with WebGL
 
 function initAttributeVariable(gl, attribute, buffer, num, type) {
     gl1.bindBuffer(gl1.ARRAY_BUFFER, buffer);
@@ -22,7 +22,7 @@ function initobj(gl1, program) {
     return o;
 }
 
-function initialize_surface(gl1, program, p, t) {
+function initground(gl1, program, p, t) {
     var o = new Object();
 
     o.vertexBuffer = createEmptyArrayBuffer(gl1, program.position, 3, gl1.FLOAT);
@@ -83,11 +83,11 @@ function onReadOBJFile1(fileString, fileName, scale, reverse) {
     var objDoc = new OBJDoc(fileName); // Create a OBJDoc object
     var result = objDoc.parse(fileString, scale, reverse);
     if (!result) {
-        g_objDoc = null; g_drawingInfo = null;
+        g1_objDoc = null; g1_drawingInfo = null;
         console.log("OBJ file parsing error.");
         return;
     }
-    g_objDoc = objDoc;
+    g1_objDoc = objDoc;
 }
 
 
@@ -131,7 +131,7 @@ function init() {
 
     gl1.useProgram(program_ground1);
 
-    function modelSurface() {
+    function initGround() {
 
         program_ground1.position = gl1.getAttribLocation(program_ground1, "a_Position");
         program_ground1.tex = gl1.getAttribLocation(program_ground1, "a_TexCoord");
@@ -141,12 +141,12 @@ function init() {
         var tex_coord = [vec2(-1.0, 1.0), vec2(-1.0, -1.0), vec2(1.0, 1.0), vec2(1.0, -1.0)]; //change
         var all_tex = [tex_coord[2], tex_coord[0], tex_coord[1], tex_coord[1], tex_coord[3], tex_coord[2]];
 
-        var model_surface = initialize_surface(gl1, program_ground1, all_points, all_tex);
+        var modelground = initground(gl1, program_ground1, all_points, all_tex);
 
-        return model_surface;
+        return modelground;
     }
 
-    var model_surface = modelSurface();
+    var modelground = initGround();
 
     var image = document.createElement('img');
     image.crossorigin = 'anonymous';
@@ -244,11 +244,11 @@ function init() {
         // var mvm_obj = lookAt(eye, at, up);
         // gl1.uniformMatrix4fv(mv_obj, false, flatten(mvm_obj));
 
-        if (!g_drawingInfo && g_objDoc && g_objDoc.isMTLComplete()) {
+        if (!g1_drawingInfo && g1_objDoc && g1_objDoc.isMTLComplete()) {
             // OBJ and all MTLs are available
-            g_drawingInfo = onReadComplete(gl1, modelobj, g_objDoc);
+            g1_drawingInfo = onReadComplete(gl1, modelobj, g1_objDoc);
         }
-        if (!g_drawingInfo) {
+        if (!g1_drawingInfo) {
 
         } else {
             if (motion) {
@@ -279,13 +279,13 @@ function init() {
 
             gl1.uniformMatrix4fv(mv_obj, false, flatten(model_final));
             gl1.depthFunc(gl1.GREATER);
-            gl1.drawElements(gl1.TRIANGLES, g_drawingInfo.indices.length, gl1.UNSIGNED_SHORT, 0);
+            gl1.drawElements(gl1.TRIANGLES, g1_drawingInfo.indices.length, gl1.UNSIGNED_SHORT, 0);
 
             //OBJ
             gl1.uniformMatrix4fv(mv_obj, false, flatten(vmv_objfinal));
             gl1.uniform1f(gl1.getUniformLocation(program_obj1, "visibility"), 1);
             gl1.depthFunc(gl1.LESS);
-            gl1.drawElements(gl1.TRIANGLES, g_drawingInfo.indices.length, gl1.UNSIGNED_SHORT, 0);
+            gl1.drawElements(gl1.TRIANGLES, g1_drawingInfo.indices.length, gl1.UNSIGNED_SHORT, 0);
 
 
         }
