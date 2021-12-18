@@ -16,8 +16,11 @@
     <h2>Part 1: Three quadrilaterals (quads)</h2>
     <canvas id="gl-canvas1" width="512" height="512"></canvas>
     <br>
-    <h2>Part 2: Shadows</h2>
+    <h2>Part 2: Draw shadows</h2>
     <canvas id="gl-canvas2" width="512" height="512"></canvas>
+    <br>
+    <h2>Part 3:  Draw invisible shadows</h2>
+    <canvas id="gl-canvas3" width="512" height="512"></canvas>
     <br>
 
     <!-- Shader's Scripts -->
@@ -71,6 +74,39 @@
             }
         </script>
     <script type="text/javascript" src="Part2.js"></script>
+
+    <!--Part 3 -->
+    <script id="vertex-shader-3" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        attribute vec2 a_TexCoord;
+        
+        varying vec2 v_TexCoord;
+
+        uniform mat4 projectMatrix;
+        uniform mat4 modelViewMatrix;
+
+        void main() {
+           
+            v_TexCoord = a_TexCoord;
+            gl_Position =  projectMatrix * modelViewMatrix * a_Position;
+        }
+    </script>
+    <script id="fragment-shader-3" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying vec2 v_TexCoord;
+        
+        uniform sampler2D texMap;
+        uniform float visibility;
+        
+        void main(){
+
+            vec3 v = vec3(visibility);
+            gl_FragColor = vec4(v, 1) * texture2D(texMap, v_TexCoord);
+        }
+
+    </script>
+    <script type="text/javascript" src="Part3.js"></script>
 </body>
 
 </html>
