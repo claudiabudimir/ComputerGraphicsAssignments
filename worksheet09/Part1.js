@@ -239,8 +239,6 @@ function init() {
         light[2] = 2*Math.cos(theta);
         
         // Model-view matrix for shadow then render
-        gl3.uniform1f(gl3.getUniformLocation(program, "visibility"), 0);// shadows should be invisible
-
         modelViewMatrix = mult(modelViewMatrix, translate(light[0], light[1],light[2]));
         modelViewMatrix = mult(modelViewMatrix, m);
         modelViewMatrix = mult(modelViewMatrix, translate(-light[0],-light[1], -light[2]));
