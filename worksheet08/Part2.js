@@ -99,9 +99,8 @@ function init() {
     var theta = 0;
     var light = vec3(0.0, 2.0, -2.0);
     var m = mat4();// Shadow projection matrix initially an identity matrix
-    var d = -(light[1] -(-1));
     m[3][3] = 0.0;
-    m[3][1] = 1.0/d + 0.0005;
+    m[3][1] = -1.0/(light[1]+1) + 0.0001;
 
     function render() {
         gl2.clear(gl2.COLOR_BUFFER_BIT | gl2.DEPTH_BUFFER_BIT);
