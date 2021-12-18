@@ -77,7 +77,6 @@ function onReadOBJFile1(fileString, fileName, scale, reverse) {
     g1_objDoc = objDoc;
 }
 
-
 function init() {
 
     canvas = document.getElementById("gl-canvas1");
@@ -138,12 +137,11 @@ function init() {
     };
     image.src = 'xamp23.png';
 
-
     var eye = vec3(0, 0, 0);
     var at = vec3(0.0, 0.0, 0.);
     const up = vec3(0.0, 1.0, 0.0);
 
-    var fovy = 90.0; //angle in degrees
+    var fovy = 90.0; 
     var aspect = canvas.width / canvas.height;
     var near = 1.0;
     var far = 100.0;
@@ -161,19 +159,17 @@ function init() {
 
     function render() {
 
-        // BACKGROUND
-
+        //Background
         gl1.clear(gl1.COLOR_BUFFER_BIT | gl1.DEPTH_BUFFER_BIT);
-
         gl1.useProgram(playground);
 
-        var pm_ground = gl1.getUniformLocation(playground, 'projectMatrix');
-        var pj_ground = perspective(fovy, aspect, near, far);
+        var proj_matrix_ground = gl1.getUniformLocation(playground, 'projectMatrix');
+        var proj_ground = perspective(fovy, aspect, near, far);
         if (above) {
-            pj_groundabove = lookAt(vec3(0.0, 1.0, -2.999999), vec3(0.0, 0.0, -3.0), vec3(0.0, 1.0, 0.0));
-            pj_ground = mult(pj_ground, pj_groundabove);
+            proj_ground_above = lookAt(vec3(0.0, 1.0, -3.0), vec3(0.0, 0.0, -3.0), vec3(0.0, 1.0, 0.0));
+            proj_ground = mult(proj_ground, proj_ground_above);
         }
-        gl1.uniformMatrix4fv(pm_ground, false, flatten(pj_ground));
+        gl1.uniformMatrix4fv(proj_matrix_ground, false, flatten(proj_ground));
 
 
         var mv_ground = gl1.getUniformLocation(playground, "modelViewMatrix");
