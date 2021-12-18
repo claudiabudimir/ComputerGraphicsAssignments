@@ -107,18 +107,18 @@ function init() {
 
 
     // Object
-    var program_obj1 = initShaders(gl1, "vertex-shader-1obj", "fragment-shader-1obj");
-    gl1.useProgram(program_obj1);
+    var program_obj = initShaders(gl1, "vertex-shader-1obj", "fragment-shader-1obj");
+    gl1.useProgram(program_obj);
 
     var modelobj = initObject();
 
     function initObject() {
 
-        program_obj1.a_Position = gl1.getAttribLocation(program_obj1, 'a_Position');
-        program_obj1.a_Normal = gl1.getAttribLocation(program_obj1, 'a_Normal');
-        program_obj1.a_Color = gl1.getAttribLocation(program_obj1, 'a_Color');
+        program_obj.a_Position = gl1.getAttribLocation(program_obj, 'a_Position');
+        program_obj.a_Normal = gl1.getAttribLocation(program_obj, 'a_Normal');
+        program_obj.a_Color = gl1.getAttribLocation(program_obj, 'a_Color');
         // Prepare empty buffer objects for vertex coordinates, colors, and normals
-        var model = initobj(gl1, program_obj1);
+        var model = initobj(gl1, program_obj);
 
         // Start reading the OBJ file
         readOBJFile(obj_fn, gl1, model, 1.0, true); //Scaled
@@ -185,13 +185,10 @@ function init() {
     var above = false;
     var light = true;
 
-    var circle_center = vec3(0.0, 2.0, -2.0);
-    var radius = 2;
-
-    var M = mat4(); //Identity matrix
-    var d = -(circle_center[1] - (-1));
-    M[3][3] = 0; //row //column
-    M[3][1] = 1 / d + 0.00001;
+    var light_source = vec3(0.0, 2.0, -2.0);
+    var m = mat4();// Shadow projection matrix initially an identity matrix
+    m[3][3] = 0.0;
+    m[3][1] = -1.0/(light_source[1]+1) + 0.0001;
 
     function render() {
 
@@ -224,14 +221,14 @@ function init() {
 
         // BOTH OBJ AND SHADOWS
 
-        gl1.useProgram(program_obj1);
+        gl1.useProgram(program_obj);
 
-        initAttributeVariable(gl1, program_obj1.a_Position, modelobj.vertexBuffer, 3, gl1.FLOAT);
-        initAttributeVariable(gl1, program_obj1.a_Normal, modelobj.normalBuffer, 3, gl1.FLOAT);
-        initAttributeVariable(gl1, program_obj1.a_Color, modelobj.colorBuffer, 4, gl1.FLOAT);
+        initAttributeVariable(gl1, program_obj.a_Position, modelobj.vertexBuffer, 3, gl1.FLOAT);
+        initAttributeVariable(gl1, program_obj.a_Normal, modelobj.normalBuffer, 3, gl1.FLOAT);
+        initAttributeVariable(gl1, program_obj.a_Color, modelobj.colorBuffer, 4, gl1.FLOAT);
         gl1.bindBuffer(gl1.ELEMENT_ARRAY_BUFFER, modelobj.indexBuffer);
 
-        var pm_obj = gl1.getUniformLocation(program_obj1, 'projectMatrix');
+        var pm_obj = gl1.getUniformLocation(program_obj, 'projectMatrix');
         var pj_obj = perspective(fovy, aspect, near, far);
         if (above) {
             pj_objabove = lookAt(vec3(0.0, 1.0, -2.999999), vec3(0.0, 0.0, -3.0), vec3(0.0, 1.0, 0.0));
@@ -240,7 +237,7 @@ function init() {
 
         gl1.uniformMatrix4fv(pm_obj, gl1.FALSE, flatten(pj_obj));
 
-        var mv_obj = gl1.getUniformLocation(program_obj1, "modelViewMatrix");
+        var mv_obj = gl1.getUniformLocation(program_obj, "modelViewMatrix");
         // var mvm_obj = lookAt(eye, at, up);
         // gl1.uniformMatrix4fv(mv_obj, false, flatten(mvm_obj));
 
@@ -263,37 +260,34 @@ function init() {
             if (light) {
                 theta_shadow += 0.005;
             }
+            
+                    // Rotate light source
+        light[0] = 2*Math.sin(theta);
+        light[2] = 2*Math.cos(theta);
+        
+        // Model-view matrix for shadow then render
+        gl3.uniform1f(gl3.getUniformLocation(program, "visibility"), 0);// shadows should be invisible
 
-            var x = circle_center[0] + (radius * Math.sin(theta_shadow));
-            var y = circle_center[1];
-            var z = circle_center[2] + (radius * Math.cos(theta_shadow));
+        modelViewMatrix = mult(modelViewMatrix, translate(light[0], light[1],light[2]));
+        modelViewMatrix = mult(modelViewMatrix, m);
+        modelViewMatrix = mult(modelViewMatrix, translate(-light[0],-light[1], -light[2]));
 
-            var translation_positive = translate(x, y, z);
-            var translation_negative = translate(-x, -y, -z);
+            var model_final = mult(modelViewMatrix, vmv_objfinal);
 
-            var model_aux = mult(translation_positive, M);
-            var model = mult(model_aux, translation_negative);
-            var model_final = mult(model, vmv_objfinal);
-
-            gl1.uniform1f(gl1.getUniformLocation(program_obj1, "visibility"), 0);
+            gl1.uniform1f(gl1.getUniformLocation(program_obj, "visibility"), 0);
 
             gl1.uniformMatrix4fv(mv_obj, false, flatten(model_final));
             gl1.depthFunc(gl1.GREATER);
             gl1.drawElements(gl1.TRIANGLES, g1_drawingInfo.indices.length, gl1.UNSIGNED_SHORT, 0);
-
-            //OBJ
             gl1.uniformMatrix4fv(mv_obj, false, flatten(vmv_objfinal));
-            gl1.uniform1f(gl1.getUniformLocation(program_obj1, "visibility"), 1);
+
+            gl1.uniform1f(gl1.getUniformLocation(program_obj, "visibility"), 1);
             gl1.depthFunc(gl1.LESS);
             gl1.drawElements(gl1.TRIANGLES, g1_drawingInfo.indices.length, gl1.UNSIGNED_SHORT, 0);
 
-
         }
-
         window.requestAnimFrame(render);
-
     }
-
     render();
 
     var motion = document.getElementById("motion");
@@ -305,19 +299,14 @@ function init() {
     var view = document.getElementById("view");
 
     view.addEventListener("click", function () {
-        if (above)
-            above = false;
-        else above = true;
+        above = !above;
     });
 
     var light = document.getElementById("light");
 
     light.addEventListener("click", function () {
-        if (light)
-            light = false;
-        else light = true;
+        light = !light;
     });
-
 }
 
 init();
