@@ -145,8 +145,9 @@ function init() {
     var fovy = 90.0;
     var aspect = 1;
     var near = 1.0;
-    var far = 100.0;
+    var far = 80.0;
     var theta = 0.0;
+    
     var theta_for_shadow = 0.0;
     var is_in_motion = true;
     var is_above_view_active = false;
