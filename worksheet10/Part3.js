@@ -1,56 +1,45 @@
 var obj_fn = 'monkey.obj'
+var g_objDoc3 = null;
+var g_drawingInfo3 = null;
 
-var g3_objDoc = null; // Info parsed from OBJ file
-var g3_drawingInfo = null; // Info for drawing the 3D model with WebGL
-
-
-
-// Create a buffer object and perform the initial configuration
-function initVertexBuffers(gl3, program) {
-
-  var o = new Object();
-
-  o.vertexBuffer = createEmptyArrayBuffer(gl3, program.a_Position, 3, gl3.FLOAT);
-  o.normalBuffer = createEmptyArrayBuffer(gl3, program.a_Normal, 3, gl3.FLOAT);
-  o.colorBuffer = createEmptyArrayBuffer(gl3, program.a_Color, 4, gl3.FLOAT);
-  o.indexBuffer = gl3.createBuffer();
-
-  return o;
+function inititialize_object_buffers(gl3, program) {
+  var obj = new Object();
+  obj.vertexBuffer = create_empty_array_buffer(gl3, program.a_Position, 3, gl3.FLOAT);
+  obj.normalBuffer = create_empty_array_buffer(gl3, program.a_Normal, 3, gl3.FLOAT);
+  obj.colorBuffer = create_empty_array_buffer(gl3, program.a_Color, 4, gl3.FLOAT);
+  obj.indexBuffer = gl3.createBuffer();
+  return obj;
 }
 
-function createEmptyArrayBuffer(gl3, a_attribute, num, type) {
-
-  var buffer = gl3.createBuffer(); // Create a buffer object
-
+function create_empty_array_buffer(gl3, a_attribute, num, type) {
+  var buffer = gl3.createBuffer();
   gl3.bindBuffer(gl3.ARRAY_BUFFER, buffer);
   gl3.vertexAttribPointer(a_attribute, num, type, false, 0, 0);
-  gl3.enableVertexAttribArray(a_attribute); // Enable the assignment
-
+  gl3.enableVertexAttribArray(a_attribute); 
   return buffer;
 }
 
 function onReadComplete(gl3, model, objDoc) {
-  // Acquire the vertex coordinates and colors from OBJ file
+
   var drawingInfo = objDoc.getDrawingInfo();
 
-  // Write date into the buffer object
+  //write vertices
   gl3.bindBuffer(gl3.ARRAY_BUFFER, model.vertexBuffer);
   gl3.bufferData(gl3.ARRAY_BUFFER, drawingInfo.vertices, gl3.STATIC_DRAW);
-
+  //write normals
   gl3.bindBuffer(gl3.ARRAY_BUFFER, model.normalBuffer);
   gl3.bufferData(gl3.ARRAY_BUFFER, drawingInfo.normals, gl3.STATIC_DRAW);
-
+  //write colors
   gl3.bindBuffer(gl3.ARRAY_BUFFER, model.colorBuffer);
   gl3.bufferData(gl3.ARRAY_BUFFER, drawingInfo.colors, gl3.STATIC_DRAW);
-
-  // Write the indices to the buffer object
+  //write indices
   gl3.bindBuffer(gl3.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
   gl3.bufferData(gl3.ELEMENT_ARRAY_BUFFER, drawingInfo.indices, gl3.STATIC_DRAW);
 
   return drawingInfo;
 }
 
-function readOBJFile(fileName, gl3, model, scale, reverse) {
+function readOBJFile(fileName, scale, reverse) {
   var request = new XMLHttpRequest();
 
   request.onreadystatechange = function () {
@@ -58,20 +47,20 @@ function readOBJFile(fileName, gl3, model, scale, reverse) {
       onReadOBJFile3(request.responseText, fileName, scale, reverse);
     }
   }
-  request.open('GET', fileName, true); // Create a request to get file
-  request.send(); // Send the request
+  request.open('GET', fileName, true); 
+  request.send();
 }
 
 function onReadOBJFile3(fileString, fileName, scale, reverse) {
 
-  var objDoc = new OBJDoc(fileName); // Create a OBJDoc object
+  var objDoc = new OBJDoc(fileName); 
   var result = objDoc.parse(fileString, scale, reverse);
   if (!result) {
-    g3_objDoc = null; g3_drawingInfo = null;
-    console.log("OBJ file parsing error.");
+    g_objDoc3 = null; g_drawingInfo3 = null;
+
     return;
   }
-  g3_objDoc = objDoc;
+  g_objDoc3 = objDoc;
 }
 
 
@@ -80,23 +69,16 @@ function init() {
   canvas = document.getElementById("gl-canvas3");
   gl3 = WebGLUtils.setupWebGL(canvas);
 
-  if (!gl3) {
-    alert("WebGL isn�t available");
-  }
-
   gl3.viewport(0, 0, canvas.width, canvas.height);
   gl3.clearColor(0.3921, 0.5843, 0.9294, 1.0);
   gl3.clear(gl3.COLOR_BUFFER_BIT);
 
-
-  // Load shaders and initialize attribute buffers
   var program = initShaders(gl3, "vertex-shader", "fragment-shader");
   gl3.useProgram(program);
 
   gl3.enable(gl3.DEPTH_TEST);
   gl3.enable(gl3.CULL_FACE);
   gl3.cullFace(gl3.BACK);
-
 
   var model = initObject();
 
@@ -105,11 +87,8 @@ function init() {
     program.a_Position = gl3.getAttribLocation(program, 'a_Position');
     program.a_Normal = gl3.getAttribLocation(program, 'a_Normal');
     program.a_Color = gl3.getAttribLocation(program, 'a_Color');
-    // Prepare empty buffer objects for vertex coordinates, colors, and normals
-    var model = initVertexBuffers(gl3, program);
-
-    // Start reading the OBJ file
-    readOBJFile(obj_fn, gl3, model, 0.6, true);
+    var model = inititialize_object_buffers(gl3, program);
+    readOBJFile(obj_fn, 0.6, true);
 
     return model;
   }
@@ -118,14 +97,13 @@ function init() {
   var lookat = vec3(0.0, 0.0, 0.);
   var up = vec3(0.0, 1.0, 0.0);
 
-  var dragging = false;         // Dragging or not
-  var lastX = -1, lastY = -1;   // Last position of the mouse
-  var current_action = 0;       // Actions: 0 - none, 1 - orbit, 2 - dolly, 3 - pan
+  var dragging = false;       
+  var lastX = -1, lastY = -1;   
+  var current_action = 0;     
 
-  canvas.onmousedown = function (ev) {   // Mouse is pressed
+  canvas.onmousedown = function (ev) {   
     ev.preventDefault();
     var x = ev.clientX, y = ev.clientY;
-    // Start dragging if a mouse is in <canvas>
     var rect = ev.target.getBoundingClientRect();
     if (rect.left <= x && x < rect.right && rect.top <= y && y < rect.bottom) {
       lastX = x; lastY = y;
@@ -143,10 +121,10 @@ function init() {
     }
     dragging = false;
     current_action = 0;
-  }; // Mouse is released
+  }; 
 
   var g_last = Date.now();
-  canvas.onmousemove = function (ev) { // Mouse is moved
+  canvas.onmousemove = function (ev) { 
     var x = ev.clientX, y = ev.clientY;
     if (dragging) {
       var now = Date.now();
@@ -159,19 +137,19 @@ function init() {
         var s_last_x = ((lastX - rect.left) / rect.width - 0.5) * 2;
         var s_last_y = (0.5 - (lastY - rect.top) / rect.height) * 2;
         switch (current_action) {
-          case 1: { // orbit
+          case 1: { 
             var v1 = vec3(s_x, s_y, project_to_sphere(s_x, s_y));
             var v2 = vec3(s_last_x, s_last_y, project_to_sphere(s_last_x, s_last_y));
             qinc = qinc.make_rot_vec2vec(normalize(v1), normalize(v2));
           }
             break;
-          case 2: { // dolly
+          case 2: { 
             var e = eye_dist_pan;
             e[0] += (s_y - s_last_y) * e[0]
             e[0] = Math.max(e[0], 0.01);
           }
             break;
-          case 3: { // pan
+          case 3: { 
             var e = eye_dist_pan;
             e[1] += (s_x - s_last_x) * e[0] * 0.25;
             e[2] += (s_y - s_last_y) * e[0] * 0.25;
@@ -188,16 +166,15 @@ function init() {
     var d = Math.sqrt(x * x + y * y);
     var t = r * Math.sqrt(2);
     var z;
-    if (d < r) // Inside sphere
+    if (d < r) 
       z = Math.sqrt(r * r - d * d);
     else if (d < t)
       z = 0;
-    else       // On hyperbola
+    else       
       z = t * t / d;
     return z;
   }
 
-  // Initialize trackball
   var e = eye;
   var p = lookat;
   var z_dir = vec3(e[0] - p[0], e[1] - p[1], e[2] - p[2]);
@@ -211,11 +188,10 @@ function init() {
   qrot_inv.invert();
   up = qrot_inv.apply(up);
 
-  var fovy = 45.0; //angl3es in degrees
-  var aspect = canvas.width / canvas.height;
-  var near = 0.1;
-  var far = 50.0;
-
+  var fovy = 45.0;
+  var aspect = 1;
+  var near = 0.5;
+  var far = 60.0;
 
   var projectMatrix = gl3.getUniformLocation(program, 'projectMatrix');
   var pj = perspective(fovy, aspect, near, far);
@@ -225,14 +201,9 @@ function init() {
   modelViewMatrix = lookAt(eye, lookat, up);
   gl3.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
-
-  modelViewMatrix = lookAt(eye, lookat, up);
-  gl3.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-
   function render() {
 
     qrot = qrot.multiply(qinc);
-
     var rot_up = qrot.apply(up);
     var u = rot_up;
     var right = qrot.apply(vec3(1, 0, 0));
@@ -243,26 +214,21 @@ function init() {
     var c = centre;
     var rot_eye = qrot.apply(vec3(0, 0, e[0]));
     var re = rot_eye;
-
     var temp_re = vec3(re[0] + c[0], re[1] + c[1], re[2] + c[2]);
-
     var final = lookAt(temp_re, c, u);
 
     gl3.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(final));
 
-
-    if (!g3_drawingInfo && g3_objDoc && g3_objDoc.isMTLComplete()) {
-      // OBJ and all MTLs are available
-      console.log("IM HEREEE")
-      g3_drawingInfo = onReadComplete(gl3, model, g3_objDoc);
+    if (!g_drawingInfo3 && g_objDoc3 && g_objDoc3.isMTLComplete()) {
+      g_drawingInfo3 = onReadComplete(gl3, model, g_objDoc3);
     }
-    if (!g3_drawingInfo) {
+    if (!g_drawingInfo3) {
       window.requestAnimationFrame(render);
       return;
     }
 
     gl3.clear(gl3.COLOR_BUFFER_BIT | gl3.DEPTH_BUFFER_BIT);
-    gl3.drawElements(gl3.TRIANGLES, g3_drawingInfo.indices.length, gl3.UNSIGNED_SHORT, 0);
+    gl3.drawElements(gl3.TRIANGLES, g_drawingInfo3.indices.length, gl3.UNSIGNED_SHORT, 0);
 
     window.requestAnimFrame(render);
 
